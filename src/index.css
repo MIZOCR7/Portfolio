@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Font Variables ─────────────────────────────────── */
+:root {
+  --font-heading: 'HelveticaNowDisplay-Medium', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'HelveticaNowDisplayW01-Rg', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ─── Global Reset ───────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: #000;
+  color: #000;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typewriter blinking cursor ────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: #000;
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+/* ─── Pill button appear animation ─────────────────────── */
+@keyframes pillAppear {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pills-appear {
+  opacity: 0;
+  animation: pillAppear 0.4s ease 0.4s forwards;
+}
+
+/* ─── Section fade-in on scroll ─────────────────────────── */
+@keyframes sectionIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.section-reveal {
+  opacity: 0;
+}
+.section-reveal.visible {
+  animation: sectionIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ─── Mobile nav overlay link hover ────────────────────── */
+.nav-link-mobile {
+  transition: opacity 0.2s;
+}
+.nav-link-mobile:hover {
+  opacity: 0.5;
+}
+
+/* ─── Scrollbar clean ───────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+
+
+/* ─── CSS Font Variables ─────────────────────────────────── */
+:root {
+  --font-heading: 'HelveticaNowDisplay-Medium', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'HelveticaNowDisplayW01-Rg', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ─── Global Reset ───────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background: #fff;
+  color: #000;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typewriter blinking cursor ────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: #000;
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+/* ─── Pill button appear animation ─────────────────────── */
+@keyframes pillAppear {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pills-appear {
+  opacity: 0;
+  animation: pillAppear 0.4s ease 0.4s forwards;
+}
+
+/* ─── Mobile nav overlay link hover ────────────────────── */
+.nav-link-mobile {
+  transition: opacity 0.2s;
+}
+.nav-link-mobile:hover {
+  opacity: 0.5;
+}
+
+/* ─── Hamburger bars transition ─────────────────────────── */
+.bar-top, .bar-mid, .bar-bot {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+}
+
+/* ─── Scrollbar clean ───────────────────────────────────── */
+::-webkit-scrollbar { display: none; }
+html { scrollbar-width: none; }
