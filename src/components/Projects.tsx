@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 
 interface Project {
   index: string
@@ -39,7 +40,43 @@ const PROJECTS: Project[] = [
   },
 ]
 
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+{}|<>?'
+
 function ProjectCard({ project }: { project: Project }) {
+  const [isHovered, setIsHovered] = useState(false)
+  const [displayText, setDisplayText] = useState(project.description)
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>
+    if (isHovered) {
+      let iteration = 0
+      interval = setInterval(() => {
+        setDisplayText(() =>
+          project.description
+            .split('')
+            .map((letter, index) => {
+              if (index < iteration) {
+                return project.description[index]
+              }
+              if (letter === ' ') return ' '
+              return CHARS[Math.floor(Math.random() * CHARS.length)]
+            })
+            .join('')
+        )
+        // Adjust iteration speed so it finishes in ~0.5s (500ms / 30ms = ~16 frames)
+        iteration += project.description.length / 15
+        if (iteration >= project.description.length) {
+          clearInterval(interval)
+          setDisplayText(project.description)
+        }
+      }, 30)
+    } else {
+      setDisplayText(project.description)
+    }
+
+    return () => clearInterval(interval)
+  }, [isHovered, project.description])
+
   const containerVariants = {
     rest: { },
     hover: { },
@@ -67,11 +104,13 @@ function ProjectCard({ project }: { project: Project }) {
         transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
       }}
       onMouseEnter={e => {
+        setIsHovered(true)
         ;(e.currentTarget as HTMLElement).style.boxShadow =
           '0 0 40px rgba(255,255,255,0.04), 0 0 0 1px rgba(255,255,255,0.15)'
         ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.25)'
       }}
       onMouseLeave={e => {
+        setIsHovered(false)
         ;(e.currentTarget as HTMLElement).style.boxShadow =
           '0 0 0 1px rgba(255,255,255,0.04)'
         ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)'
@@ -113,7 +152,7 @@ function ProjectCard({ project }: { project: Project }) {
           className="text-[14px] text-white/50 leading-relaxed flex-1"
           style={{ fontFamily: 'var(--font-body)' }}
         >
-          {project.description}
+          {displayText}
         </motion.p>
 
         {/* Stack pills */}
