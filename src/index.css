@@ -35,6 +35,7 @@
   --clay: #a9481f;
   --clay-wash: #eddfd2;
   --glow: rgba(169, 72, 31, 0.16);
+  --flag: #e30a17;
   --btn-bg: #13120f;
   --btn-fg: #f2efe8;
 
@@ -1287,6 +1288,499 @@ button {
   color: var(--ink-45);
 }
 
+/* ── the wall: certificate prints ───────────────────────── */
+.wall {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 44px) clamp(18px, 2.4vw, 34px);
+  padding-block: 6px;
+}
+
+.print {
+  margin: 0;
+  transform: rotate(var(--r, 0deg));
+  transition: transform 0.6s var(--ease), opacity 0.9s var(--ease);
+}
+
+.print--wide {
+  grid-column: 1 / -1;
+}
+
+.print:hover {
+  transform: rotate(0deg) translateY(-4px);
+}
+
+.print-mat {
+  display: block;
+  background: #fffdf8;
+  padding: 12px;
+  border: 1px solid var(--line);
+  box-shadow: 0 22px 36px -30px rgba(19, 18, 15, 0.7);
+  transition: box-shadow 0.5s ease;
+}
+
+.print:hover .print-mat {
+  box-shadow: 0 34px 50px -32px rgba(19, 18, 15, 0.65);
+}
+
+.print-mat img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  background: #fffdf8;
+  filter: saturate(0.94) contrast(1.02);
+}
+
+.print--wide .print-mat img {
+  aspect-ratio: auto;
+  height: clamp(240px, 46vh, 470px);
+  object-fit: contain;
+}
+
+.print figcaption {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.print-title {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.print-meta {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+.print-note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-45);
+  max-width: 40ch;
+}
+
+.wall-note {
+  margin-top: clamp(28px, 4vw, 44px);
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 9.5px;
+}
+
+/* ── Ankara / METU ──────────────────────────────────────── */
+.ankara {
+  position: relative;
+  padding-block: clamp(64px, 9vw, 140px);
+  background: linear-gradient(180deg, #f4f0e8 0%, #efe9dd 100%);
+  border-top: 1px solid var(--line);
+  overflow: clip;
+}
+
+.ankara::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--flag);
+  opacity: 0.9;
+}
+
+.ankara-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ankara-top .mono:first-child {
+  color: var(--flag);
+}
+
+.ankara-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  gap: clamp(28px, 4vw, 66px);
+  padding-top: clamp(26px, 4vw, 54px);
+  align-items: start;
+}
+
+.ankara-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(3.4rem, 9.6vw, 8.4rem);
+  line-height: 0.82;
+  letter-spacing: -0.035em;
+}
+
+.ankara-year {
+  color: var(--flag);
+  font-style: italic;
+}
+
+.ankara-lead {
+  margin-top: clamp(20px, 3vw, 32px);
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  line-height: 1.2;
+  max-width: 26ch;
+}
+
+.ankara-p {
+  margin-top: 16px;
+  font-size: 16.5px;
+  line-height: 1.68;
+  color: var(--ink-70);
+  max-width: 48ch;
+}
+
+.ankara-stamp {
+  margin-top: clamp(26px, 3.4vw, 40px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 400px;
+  padding: 12px 16px;
+  background: #fffdf8;
+  border: 1px solid var(--flag);
+  border-radius: 3px;
+  box-shadow: 5px 6px 0 rgba(227, 10, 23, 0.12);
+}
+
+.stamp-flag {
+  width: 56px;
+  height: 38px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.stamp-title {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--flag);
+}
+
+.stamp-sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--ink-70);
+}
+
+.ankara-photos {
+  display: grid;
+  gap: clamp(20px, 3vw, 34px);
+}
+
+.shot {
+  margin: 0;
+}
+
+.shot-mat {
+  background: #fffdf8;
+  padding: 12px;
+  border: 1px solid var(--line);
+  box-shadow: 0 26px 44px -34px rgba(19, 18, 15, 0.8);
+}
+
+.shot-mat img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: grayscale(1) contrast(1.05);
+}
+
+.shot--sub {
+  width: 64%;
+  margin-left: auto;
+  transform: rotate(-2deg);
+}
+
+.shot figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+
+.ankara-credit {
+  margin-top: clamp(30px, 4vw, 48px);
+  padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 9px;
+}
+
+/* ── Ada, the voice companion ───────────────────────────── */
+.ada-launch {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 80;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 19px;
+  border-radius: 100px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  box-shadow: 0 20px 34px -20px rgba(19, 18, 15, 0.75);
+  transition: transform 0.4s var(--ease), background-color 0.3s ease;
+}
+
+.ada-launch:hover {
+  transform: translateY(-3px);
+  background: var(--clay);
+}
+
+.ada-launch-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e08050;
+}
+
+.ada-launch-dot[data-live='true'] {
+  animation: pulseDot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  50% {
+    opacity: 0.25;
+    transform: scale(0.6);
+  }
+}
+
+.ada {
+  position: fixed;
+  right: 22px;
+  bottom: 80px;
+  z-index: 81;
+  width: min(352px, calc(100vw - 32px));
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: 5px;
+  box-shadow: 0 44px 70px -44px rgba(19, 18, 15, 0.85);
+  animation: adaIn 0.45s var(--ease) both;
+}
+
+@keyframes adaIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+}
+
+.ada-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ada-name {
+  font-family: var(--serif);
+  font-size: 25px;
+  line-height: 1;
+}
+
+.ada-role {
+  margin-top: 5px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+
+.ada-close {
+  font-size: 12px;
+  color: var(--ink-45);
+  padding: 4px;
+  line-height: 1;
+}
+
+.ada-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-top: 14px;
+}
+
+.ava {
+  position: relative;
+  z-index: 1;
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+}
+
+.ava-glow {
+  transform-origin: 100px 112px;
+  animation: breathe 4.6s ease-in-out infinite;
+}
+
+.ava-blink {
+  transform-origin: 100px 95px;
+  animation: blinkEye 5.4s infinite;
+}
+
+.ava-brow {
+  fill: none;
+  stroke: #2c1f1a;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+
+.ava-nose,
+.ava-lip-top {
+  fill: none;
+  stroke: #8e5a44;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.ava-lip-bottom {
+  fill: #b4553f;
+}
+
+.ava-mouth {
+  transform-origin: 100px 120px;
+  transform: scaleY(calc(0.55 + var(--level, 0) * 2));
+  transition: transform 0.09s linear;
+}
+
+@keyframes blinkEye {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95%,
+  97% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes breathe {
+  50% {
+    transform: scale(1.07);
+    opacity: 0.75;
+  }
+}
+
+.ada-rings {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.ada-rings span {
+  position: absolute;
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  border: 1px solid rgba(169, 72, 31, 0.4);
+  opacity: 0;
+}
+
+.ada-rings[data-live='true'] span {
+  animation: ripple 2.7s ease-out infinite;
+}
+
+.ada-rings[data-live='true'] span:nth-child(2) {
+  animation-delay: 0.9s;
+}
+
+.ada-rings[data-live='true'] span:nth-child(3) {
+  animation-delay: 1.8s;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+.ada-status {
+  margin-top: 16px;
+  min-height: 42px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-70);
+}
+
+.ada-controls {
+  margin-top: 12px;
+}
+
+.ada-mic {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px;
+  border-radius: 100px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.ada-mic:hover {
+  background: var(--clay);
+}
+
+.ada-mic--stop {
+  background: var(--clay);
+}
+
+.ada-mic-icon {
+  font-size: 8px;
+}
+
+.ada-foot {
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 8px;
+  line-height: 1.7;
+  letter-spacing: 0.07em;
+  color: var(--ink-45);
+}
+
 /* ── reveal choreography ────────────────────────────────── */
 .reveal {
   opacity: 0;
@@ -1416,6 +1910,22 @@ button {
     grid-column: 2;
     text-align: left;
   }
+
+  .wall {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ankara-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ankara-photos {
+    grid-template-columns: 1fr;
+  }
+
+  .shot--sub {
+    width: 72%;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1486,6 +1996,37 @@ button {
 
   .portrait-frame {
     box-shadow: 14px 16px 0 -1px var(--clay-wash), 14px 16px 0 0 var(--line);
+  }
+
+  .wall {
+    grid-template-columns: 1fr;
+  }
+
+  .print,
+  .print--wide {
+    transform: none;
+  }
+
+  .shot--sub {
+    width: 100%;
+    transform: none;
+  }
+
+  .ada {
+    right: 12px;
+    left: 12px;
+    bottom: 76px;
+    width: auto;
+  }
+
+  .ada-launch {
+    right: 14px;
+    bottom: 16px;
+  }
+
+  .ankara-lead,
+  .ankara-p {
+    max-width: none;
   }
 }
 
@@ -1661,8 +2202,13 @@ button {
     display: none;
   }
 
-  .hero-shot {
-    display: none;
+  .hero-shot,
+  .wall,
+  .wall-note,
+  .ankara,
+  .ada,
+  .ada-launch {
+    display: none !important;
   }
 
   .row {
@@ -1703,5 +2249,19 @@ button {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
+  }
+}
+
+.shot--third {
+  width: 46%;
+  margin-left: 6%;
+  transform: rotate(1.6deg);
+}
+
+@media (max-width: 640px) {
+  .shot--third {
+    width: 100%;
+    margin-left: 0;
+    transform: none;
   }
 }

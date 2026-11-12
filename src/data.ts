@@ -1,52 +1,45 @@
 export const PROFILE = {
   name: 'Ziad Emad',
-  fullName: 'Ziad Emad Ahmed',
+  fullName: 'Ziad Emad Ahmed Metwally Salem',
   role: 'Computer vision & embedded AI',
-  email: 'ziad.1024087@stemoctober.moe.edu.eg',
+  email: 'zemad1665@gmail.com',
   github: 'https://github.com/MIZOCR7',
   linkedin: 'https://www.linkedin.com/in/ziad-emad-470604400',
   school: 'STEM High School for Boys — 6th of October',
   location: '6th of October City, Egypt',
   updated: 'November 2026',
+  portfolio: 'portfolio-2kkf.vercel.app',
 }
 
 export const LEDE =
-  'I am a Grade 12 student at STEM High School in 6th of October, Egypt. Most of what I do sits at the edge of two things: a neural network that has to be right, and a machine that has to actually move. Right now I am finishing a small rover that drives inside water pipes and marks corrosion and cracks as it goes.'
+  'Finalist at the Egypt Science & Engineering Fair 2026 with a pest-detection system for Egyptian farms, and the student behind a rover that finds corrosion inside pipes. I am 17, I study at STEM October, and the next four years belong to METU.'
 
 export const FACTS = [
   { label: 'Based in', value: '6th of October City, Egypt' },
-  { label: 'Focus', value: 'Computer vision · embedded AI' },
-  { label: 'Now', value: 'Grade 12 · applying for Computer Engineering' },
+  { label: 'Honours', value: 'ISEF finalist 2026 · ICPC Teens, 31st' },
+  { label: 'Next', value: 'Computer Engineering — METU, Ankara' },
 ]
 
 export const MARQUEE = [
-  'Python',
+  'Computer vision',
   'PyTorch',
-  'Ultralytics YOLO11',
-  'OpenCV',
-  'C++',
-  'Arduino',
-  'ESP32',
-  'React',
-  'TypeScript',
-  'Blender',
-  'LaTeX',
-  'Git',
+  'YOLO11',
+  'Robotics',
+  'RAG systems',
+  'ISEF finalist',
+  'NASA Space Apps',
+  'ICPC',
+  'Python',
+  'Ankara, 2027',
 ]
 
-export const BAND = [
-  'Computer vision',
-  'Embedded AI',
-  'Robotics',
-  'YOLO11',
-  'Egypt',
-]
+export const BAND = ['ISEF finalist 2026', 'Ankara', 'Computer vision', 'STEM October', 'Egypt']
 
 export type Spec = { k: string; v: string }
 
 export const FEATURE = {
   id: '001',
-  kicker: 'Capstone · 2025—2026',
+  kicker: 'Grade 12 capstone · 2025—2026',
   title: 'Pipe Inspector',
   subtitle: 'A rover that finds corrosion inside pipes',
   description:
@@ -69,56 +62,38 @@ export const FEATURE = {
 export const PROJECTS = [
   {
     id: '002',
-    kicker: 'Grade 11 capstone',
-    title: 'Sprout',
+    kicker: 'ISEF national · 2026',
+    title: 'Pest Sentinel',
     description:
-      'A greenhouse companion built with our capstone team: live soil-moisture, temperature and light readings feed an animated plant that reacts in real time, and a voice button waters it hands-free.',
-    image: '/img/sprout.jpg',
-    alt: 'Laptop on a workbench running the Sprout plant dashboard with sensor readings',
-    tags: ['Arduino', 'Python', 'HTML / JS'],
-    links: [
-      { label: 'Greenhouse repo', href: 'https://github.com/MIZOCR7/GreenHouse-project' },
-      { label: '3D design', href: 'https://github.com/MIZOCR7/3D-design-for-the-greenhouse' },
-    ],
+      'Egypt loses a serious share of its crops to pests that are spotted too late. This project pairs a deep-learning detector with a drone platform so a field can be scanned from above and treated only where it is needed. It reached the Egypt Science & Engineering Fair 2026 as a finalist.',
+    image: '/img/certs/isef.jpg',
+    alt: 'Egypt Science and Engineering Fair 2026 certificate of appreciation awarded to Ziad Emad Ahmed Metwally',
+    tags: ['Deep learning', 'Drones', 'Agriculture'],
+    links: [{ label: 'ISEF 2026', href: '#recognition' }],
   },
   {
     id: '003',
-    kicker: 'Geo Club',
-    title: 'Club platform',
+    kicker: 'Geology Club · 2026/27',
+    title: 'Geology RAG',
     description:
-      'Website and backend for our school geography club — event pages, member showcases and a small API behind them. My first project that other people actually had to use.',
+      'A retrieval-augmented system that answers questions from the club’s geological references instead of guessing, wrapped in a chat interface members actually use. Built as AI modelling director of the October Geology Club.',
     image: null,
-    tile: 'GEO',
+    tile: 'RAG',
     alt: '',
-    tags: ['HTML / CSS', 'JavaScript', 'Node', 'Vercel'],
-    links: [
-      { label: 'Live site', href: 'https://ui-geo-club.vercel.app' },
-      { label: 'Backend', href: 'https://github.com/MIZOCR7/GEO_CLUB_BACKEND' },
-    ],
+    tags: ['RAG', 'Python', 'Chat UI'],
+    links: [{ label: 'Geology Club', href: '#recognition' }],
   },
 ]
 
 export const MINOR = [
   {
-    name: 'Terminal-Craft',
-    stack: 'Python · terminal game',
-    href: 'https://github.com/MIZOCR7/Terminal-Craft',
+    name: 'Sprout',
+    stack: 'Arduino · greenhouse telemetry',
+    href: 'https://github.com/MIZOCR7/GreenHouse-project',
   },
-  {
-    name: 'AI UI',
-    stack: 'TypeScript · interface study',
-    href: 'https://ai-ui-wine.vercel.app',
-  },
-  {
-    name: 'Study Timer',
-    stack: 'HTML · focus timer',
-    href: 'https://github.com/MIZOCR7/Study_Timer',
-  },
-  {
-    name: 'PIL Image Filters',
-    stack: 'Python · batch image tooling',
-    href: 'https://github.com/MIZOCR7/PIL-image-filter-',
-  },
+  { name: 'AI UI', stack: 'TypeScript · interface study', href: 'https://ai-ui-wine.vercel.app' },
+  { name: 'Terminal-Craft', stack: 'Python · terminal game', href: 'https://github.com/MIZOCR7/Terminal-Craft' },
+  { name: 'Study Timer', stack: 'HTML · focus timer', href: 'https://github.com/MIZOCR7/Study_Timer' },
 ]
 
 export const STATS = [
@@ -143,6 +118,127 @@ export const CASE_COLUMNS = [
   },
 ]
 
+/* ── the certificate wall ─────────────────────────────── */
+export type Certificate = {
+  image: string
+  title: string
+  org: string
+  year: string
+  note: string
+  span?: boolean
+}
+
+export const CERTIFICATES: Certificate[] = [
+  {
+    image: '/img/certs/isef.jpg',
+    title: 'Egypt Science & Engineering Fair',
+    org: 'ISEF-affiliated national fair',
+    year: '2026',
+    note: 'Certificate of appreciation, presented by the Deputy Minister for Educational Technology.',
+    span: true,
+  },
+  {
+    image: '/img/certs/acpc.jpg',
+    title: 'ICPC Egyptian Teens',
+    org: 'International Collegiate Programming Contest',
+    year: '2026',
+    note: 'Thirty-first place in the online qualification, 14 August 2026.',
+  },
+  {
+    image: '/img/certs/nasa.jpg',
+    title: 'NASA Space Apps Challenge',
+    org: 'NASA International Space Apps',
+    year: '2025',
+    note: '“Galactic Problem Solver” — outstanding participation, October 2025.',
+  },
+  {
+    image: '/img/certs/earth.jpg',
+    title: 'The Earth Prize',
+    org: 'Global sustainability competition',
+    year: '2026',
+    note: 'Participant certificate for the 2026 edition.',
+  },
+  {
+    image: '/img/certs/mal.jpg',
+    title: 'STEM Model Arab League',
+    org: 'Head of the IT department',
+    year: '2026',
+    note: 'Awarded for leadership of the IT department across the season.',
+  },
+  {
+    image: '/img/certs/geo.jpg',
+    title: 'October Geology Club',
+    org: 'AI modelling director',
+    year: '2026/27',
+    note: 'Certificate of completion for the academic season.',
+  },
+  {
+    image: '/img/certs/ibm.jpg',
+    title: 'IBM Machine Learning',
+    org: 'Professional certificate',
+    year: '2025',
+    note: 'Supervised learning, model evaluation and Python tooling.',
+  },
+]
+
+/* ── METU chapter ─────────────────────────────────────── */
+export const ANKARA = {
+  coordinates: '39.93° N — 32.85° E',
+  title: 'Ankara',
+  lead: 'One university, one city, one plan.',
+  body: [
+    'I have never been to Ankara. Everything I know about METU I know from its work: a campus built around a forest, a computer engineering department that treats research as something you build with your hands, and graduates who go on to solve problems that are bigger than one country.',
+    'That is the kind of engineer I am trying to become. Not the kind who stops at a notebook. The kind who builds a rover, drives it into a pipe, and comes back with the frame that proves the crack is there.',
+    'Türkiye Bursları is how I get there. METU is why.',
+  ],
+}
+
+/* ── timeline ─────────────────────────────────────────── */
+export const TIMELINE = [
+  {
+    year: '2023—2026',
+    what: 'STEM High School for Boys — 6th of October',
+    sub: 'Admitted at 15: 98% on the entrance exam, ranked 245 of ~40,000 candidates',
+    note: '6th of October City, Egypt',
+  },
+  {
+    year: '2026',
+    what: 'ISEF finalist — Egypt Science & Engineering Fair',
+    sub: 'Pest detection for Egyptian farms, presented to national judges',
+    note: 'National finalist',
+  },
+  {
+    year: '2026',
+    what: 'ICPC Egyptian Teens — 31st place',
+    sub: 'Online qualification, 14 August 2026',
+    note: 'ACPC / ICPC',
+  },
+  {
+    year: '2026',
+    what: 'STEM Model Arab League — Head of IT',
+    sub: 'Leading the IT and machine-learning track',
+    note: 'Leadership',
+  },
+  {
+    year: '2026—',
+    what: 'October Geology Club — AI modelling director',
+    sub: 'Retrieval-augmented system over the club’s geological references',
+    note: 'Research tooling',
+  },
+  {
+    year: '2025—2026',
+    what: 'Resala — STEM leader, Sadat City',
+    sub: 'Mentoring local students in hands-on science and engineering',
+    note: 'Volunteering',
+  },
+  {
+    year: '2024—',
+    what: 'Hack Club — software engineer',
+    sub: 'Building projects that solve real problems, with the global Hack Club network',
+    note: 'Community',
+  },
+]
+
 export const TOOLKIT = [
   {
     title: 'Modelling',
@@ -152,7 +248,7 @@ export const TOOLKIT = [
       { name: 'Ultralytics YOLO', note: '' },
       { name: 'OpenCV', note: '' },
       { name: 'NumPy · pandas', note: '' },
-      { name: 'Matplotlib', note: '' },
+      { name: 'RAG · embeddings', note: '' },
     ],
   },
   {
@@ -163,7 +259,7 @@ export const TOOLKIT = [
       { name: 'ESP32', note: '' },
       { name: 'Motor drivers', note: '' },
       { name: 'Ultrasonic · analog sensors', note: '' },
-      { name: 'Blender', note: '3D' },
+      { name: 'Drone platforms', note: '' },
     ],
   },
   {
@@ -181,44 +277,11 @@ export const TOOLKIT = [
     title: 'Craft',
     items: [
       { name: 'LaTeX', note: '' },
-      { name: 'Video editing', note: '' },
-      { name: 'Poster design', note: '' },
       { name: 'Technical writing', note: '' },
+      { name: 'Poster design', note: '' },
+      { name: 'Mentoring', note: '' },
       { name: 'Arabic', note: 'native' },
       { name: 'English', note: 'fluent' },
     ],
-  },
-]
-
-export const TIMELINE = [
-  {
-    year: '2023—2026',
-    what: 'STEM High School for Boys — 6th of October',
-    sub: 'Grade 12 · capstone track in AI and engineering',
-    note: '6th of October City, Egypt',
-  },
-  {
-    year: '2025—2026',
-    what: 'Capstone — Pipe Inspector',
-    sub: 'Dataset engineering, segmentation model, rover firmware',
-    note: 'Team project · AI + embedded',
-  },
-  {
-    year: '2026',
-    what: 'International Science & Engineering Fair',
-    sub: 'Presented a research poster to judges and visitors',
-    note: 'School science fair',
-  },
-  {
-    year: '—',
-    what: 'ACPC — Arab Collegiate Programming Contest',
-    sub: 'Contestant: algorithms and problem solving against the clock',
-    note: 'School team',
-  },
-  {
-    year: '2026',
-    what: 'Geo Club — web platform',
-    sub: 'Built and shipped the club site and its backend',
-    note: 'ui-geo-club.vercel.app',
   },
 ]

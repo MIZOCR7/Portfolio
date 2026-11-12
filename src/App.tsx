@@ -4,9 +4,12 @@ import Cursor from './components/Cursor'
 import Hero from './components/Hero'
 import Work from './components/Work'
 import Capstone from './components/Capstone'
+import Recognition from './components/Recognition'
+import Ankara from './components/Ankara'
 import Toolkit from './components/Toolkit'
 import Resume from './components/Resume'
 import Contact from './components/Contact'
+import Companion from './components/Companion'
 import { useReveal } from './hooks/useReveal'
 import { BAND } from './data'
 
@@ -58,10 +61,13 @@ export default function App() {
         </div>
         <Work />
         <Capstone />
+        <Recognition />
+        <Ankara />
         <Toolkit />
         <Resume />
         <Contact />
       </main>
+      <Companion />
     </>
   )
 }

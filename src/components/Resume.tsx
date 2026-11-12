@@ -6,7 +6,7 @@ export default function Resume() {
     <section className="section section--deep" id="resume">
       <div className="wrap">
         <div className="section-head">
-          <p className="label mono">04 — Résumé</p>
+          <p className="label mono">06 — Résumé</p>
           <div>
             <h2 className="section-title reveal-mask">
               <span className="line">

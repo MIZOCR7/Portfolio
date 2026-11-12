@@ -38,3 +38,6 @@ dist-ssr
 # Local tooling
 .freebuff/
 shots/
+
+# Keep the example env file
+!.env.example

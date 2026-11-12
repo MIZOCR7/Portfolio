@@ -18,7 +18,7 @@ export default function Contact() {
     <section className="contact section--ink" id="contact">
       <div className="wrap">
         <p className="mono" style={{ marginBottom: 26 }}>
-          05 — Contact
+          07 — Contact
         </p>
 
         <h2 className="contact-title reveal-mask">
