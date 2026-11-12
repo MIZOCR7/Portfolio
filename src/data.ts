@@ -34,6 +34,14 @@ export const MARQUEE = [
   'Git',
 ]
 
+export const BAND = [
+  'Computer vision',
+  'Embedded AI',
+  'Robotics',
+  'YOLO11',
+  'Egypt',
+]
+
 export type Spec = { k: string; v: string }
 
 export const FEATURE = {

@@ -6,7 +6,9 @@ Built as a one-page portfolio and résumé: selected work, the grade-12 capstone
 ## Stack
 
 - React 19 + TypeScript, built with Vite
-- Plain CSS (no Tailwind, no animation libraries)
+- Plain CSS — no Tailwind and no animation libraries
+- Motion is hand-built: a 3D dot-sphere drawn on one canvas, pointer tilt on the cards and portrait,
+masked line reveals, clip-path image wipes and native scroll-driven parallax where supported
 - Two self-hosted fonts: Instrument Serif and Inter Tight
 
 ## Run it

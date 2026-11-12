@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 
 /**
- * Adds `.is-in` to every `.reveal` element once it scrolls into view.
- * Falls back to showing everything when the observer is missing or the
- * visitor asked for reduced motion.
+ * Adds `.is-in` to `.reveal`, `.reveal-mask` and `.reveal-img` elements once
+ * they scroll into view. Falls back to showing everything for reduced motion.
  */
 export function useReveal() {
   useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'))
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>('.reveal, .reveal-mask, .reveal-img')
+    )
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (els.length === 0) return
@@ -26,7 +27,7 @@ export function useReveal() {
           }
         })
       },
-      { rootMargin: '0px 0px -6% 0px', threshold: 0.06 }
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
     )
 
     els.forEach(el => io.observe(el))

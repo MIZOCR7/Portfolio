@@ -15,16 +15,21 @@ export default function Contact() {
   }
 
   return (
-    <section className="contact" id="contact">
+    <section className="contact section--ink" id="contact">
       <div className="wrap">
-        <p className="mono" style={{ marginBottom: 22 }}>
+        <p className="mono" style={{ marginBottom: 26 }}>
           05 — Contact
         </p>
 
-        <h2 className="contact-title reveal">
-          Let&apos;s talk
-          <br />
-          about <em>something.</em>
+        <h2 className="contact-title reveal-mask">
+          <span className="line">
+            <span>Let&apos;s talk</span>
+          </span>
+          <span className="line">
+            <span>
+              about <em>something.</em>
+            </span>
+          </span>
         </h2>
 
         <a className="contact-mail" href={`mailto:${PROFILE.email}`}>

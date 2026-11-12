@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { TOOLKIT } from '../data'
 
 export default function Toolkit() {
@@ -7,10 +8,14 @@ export default function Toolkit() {
         <div className="section-head">
           <p className="label mono">03 — Toolkit</p>
           <div>
-            <h2 className="section-title">
-              What I reach for <em>first</em>.
+            <h2 className="section-title reveal-mask">
+              <span className="line">
+                <span>
+                  What I reach for <em>first</em>.
+                </span>
+              </span>
             </h2>
-            <p className="section-sub">
+            <p className="section-sub reveal">
               Nothing here is a badge. Each line is something I have shipped, broken, or spent a weekend
               debugging.
             </p>
@@ -18,8 +23,12 @@ export default function Toolkit() {
         </div>
 
         <div className="tool-grid">
-          {TOOLKIT.map(col => (
-            <div className="tool-col reveal" key={col.title}>
+          {TOOLKIT.map((col, i) => (
+            <div
+              className="tool-col reveal"
+              key={col.title}
+              style={{ '--delay': `${i * 0.07}s` } as CSSProperties}
+            >
               <h3>{col.title}</h3>
               <ul>
                 {col.items.map(item => (
