@@ -41,3 +41,4 @@ shots/
 
 # Keep the example env file
 !.env.example
+tools/_pdf/

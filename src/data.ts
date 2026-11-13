@@ -1,3 +1,6 @@
+/* Every word on the site lives in this file. Swap the strings here and the
+   whole site changes language, tone or content — no component edits needed. */
+
 export const PROFILE = {
   name: 'Ziad Emad',
   fullName: 'Ziad Emad Ahmed Metwally Salem',
@@ -35,6 +38,38 @@ export const MARQUEE = [
 
 export const BAND = ['ISEF finalist 2026', 'Ankara', 'Computer vision', 'STEM October', 'Egypt']
 
+/* ── 01 · about ───────────────────────────────────────── */
+
+export const ABOUT = {
+  kicker: '01 — About',
+  title: ['I build things that', 'have to work', 'out there.'],
+  lead: 'Nothing I have made so far was allowed to stay on a screen.',
+  body: [
+    'I am Ziad, seventeen, from 6th of October City. I joined STEM High School for Boys at fifteen — 98% on the entrance exam, 245th of roughly forty thousand — and have spent the three years since between the workshop after class and a laptop at midnight.',
+    'Most of what I know arrived by breaking something first. A segmentation model that scored well and then saw nothing in a real pipe. A dataset stitched from four public sources that only became usable once I had re-checked the labels by hand. A greenhouse whose sensors were honest and whose wiring was not.',
+    'That is why I keep drifting to the physical end of computer science: a camera inside a pipe, a drone over a field, a probe in soil. A model is easy to draw. Making one survive contact with a real environment is the part I want to spend my life on.',
+  ],
+  values: [
+    {
+      k: 'Build, then defend',
+      v: 'Every claim I make here has a certificate, a repository or a photograph behind it. If it is not evidenced, it is not on the page.',
+    },
+    {
+      k: 'Read the failure',
+      v: 'The useful part of a project is the run that did not work. That is where the next decision comes from.',
+    },
+    {
+      k: 'Teach what you just learned',
+      v: 'Python for primary students at the Egyptian Culture Palace, STEM mentoring with Resala, peer tutoring through Schoolhouse.',
+    },
+  ],
+  portraits: [
+    { src: '/img/about.jpg', alt: 'Ziad Emad in a dark suit against green foliage', w: 400, h: 400 },
+  ],
+}
+
+/* ── 02 · selected work ───────────────────────────────── */
+
 export type Spec = { k: string; v: string }
 
 export const FEATURE = {
@@ -46,6 +81,9 @@ export const FEATURE = {
     'A six-wheeled rover that drives into water pipes, streams live video back to a laptop, and runs a YOLO11 segmentation model that outlines every patch of corrosion and every crack, frame by frame.',
   image: '/img/pipe-frame.jpg',
   alt: 'Inspection camera frame of the inside of a concrete pipe with a long crack running through it',
+  video: '/img/pipe-demo.mp4',
+  poster: '/img/pipe-poster.jpg',
+  videoNote: 'Demo run · 70 seconds · recorded on the bench rig',
   specs: [
     { k: 'Role', v: 'Dataset, model, rover firmware' },
     { k: 'Hardware', v: '6 wheels · 14 V / 3 A pack' },
@@ -73,6 +111,17 @@ export const PROJECTS = [
   },
   {
     id: '003',
+    kicker: 'Capstone build · climate control',
+    title: 'Sprout',
+    description:
+      'A sealed greenhouse that reports on itself: soil moisture, air temperature and light measured continuously, a relay board that answers with water, a fan, a lamp or heat, and a small companion interface that puts the numbers and a conversation in the same window.',
+    image: '/img/archive/build-2.jpg',
+    alt: 'The Sprout greenhouse prototype in a classroom, its LCD showing live temperature and humidity',
+    tags: ['Arduino', 'Sensors', 'Relays', 'Web UI'],
+    links: [{ label: 'Source on GitHub', href: 'https://github.com/MIZOCR7/GreenHouse-project' }],
+  },
+  {
+    id: '004',
     kicker: 'Geology Club · 2026/27',
     title: 'Geology RAG',
     description:
@@ -86,11 +135,6 @@ export const PROJECTS = [
 ]
 
 export const MINOR = [
-  {
-    name: 'Sprout',
-    stack: 'Arduino · greenhouse telemetry',
-    href: 'https://github.com/MIZOCR7/GreenHouse-project',
-  },
   { name: 'AI UI', stack: 'TypeScript · interface study', href: 'https://ai-ui-wine.vercel.app' },
   { name: 'Terminal-Craft', stack: 'Python · terminal game', href: 'https://github.com/MIZOCR7/Terminal-Craft' },
   { name: 'Study Timer', stack: 'HTML · focus timer', href: 'https://github.com/MIZOCR7/Study_Timer' },
@@ -118,7 +162,8 @@ export const CASE_COLUMNS = [
   },
 ]
 
-/* ── the certificate wall ─────────────────────────────── */
+/* ── 04 · the certificate wall ────────────────────────── */
+
 export type Certificate = {
   image: string
   title: string
@@ -134,7 +179,15 @@ export const CERTIFICATES: Certificate[] = [
     title: 'Egypt Science & Engineering Fair',
     org: 'ISEF-affiliated national fair',
     year: '2026',
-    note: 'Certificate of appreciation, presented by the Deputy Minister for Educational Technology.',
+    note: 'Certificate of appreciation for Pest Sentinel, presented by the Deputy Minister for Educational Technology.',
+    span: true,
+  },
+  {
+    image: '/img/certs/metu-ai.jpg',
+    title: 'Herkes için Yapay Zeka I',
+    org: 'Middle East Technical University',
+    year: '2026',
+    note: 'Artificial intelligence course completed 12 November 2026, signed by the Rector of METU.',
     span: true,
   },
   {
@@ -143,6 +196,14 @@ export const CERTIFICATES: Certificate[] = [
     org: 'International Collegiate Programming Contest',
     year: '2026',
     note: 'Thirty-first place in the online qualification, 14 August 2026.',
+  },
+  {
+    image: '/img/certs/culture.jpg',
+    title: 'Programming instructor',
+    org: 'Egyptian Culture Palace',
+    year: '2026',
+    note: 'For designing and teaching a course in computer science fundamentals and Python to primary school students.',
+    span: true,
   },
   {
     image: '/img/certs/nasa.jpg',
@@ -170,7 +231,22 @@ export const CERTIFICATES: Certificate[] = [
     title: 'October Geology Club',
     org: 'AI modelling director',
     year: '2026/27',
-    note: 'Certificate of completion for the academic season.',
+    note: 'Certificate of completion for the academic season, signed by the club president and supervisor.',
+  },
+  {
+    image: '/img/certs/metu-study.jpg',
+    title: 'Logo similarity user study',
+    org: 'QUT × Middle East Technical University',
+    year: '2026',
+    note: 'Fifty logo-pair judgements for a perception study run jointly by Queensland University of Technology and METU, 12 November 2026.',
+    span: true,
+  },
+  {
+    image: '/img/certs/physics.jpg',
+    title: 'Physics Brawl Online',
+    org: 'Charles University, Prague',
+    year: '2024',
+    note: 'Team place 324, category C, in the 14th international online competition. The diploma notes it is not a placement certificate.',
   },
   {
     image: '/img/certs/ibm.jpg',
@@ -181,25 +257,167 @@ export const CERTIFICATES: Certificate[] = [
   },
 ]
 
-/* ── METU chapter ─────────────────────────────────────── */
-export const ANKARA = {
+export const ALSO_ON_FILE =
+  'Also on file: Computer Network Fundamentals · AWS Scholars · Schoolhouse peer tutoring since December 2025 · Be My Eyes volunteer since December 2025'
+
+/* ── 05 · visual archive ──────────────────────────────── */
+
+export type Shot = {
+  src: string
+  alt: string
+  title: string
+  meta: string
+  ratio: string
+  span?: 'wide' | 'tall'
+}
+
+export const ARCHIVE: Shot[] = [
+  {
+    src: '/img/archive/team.jpg',
+    alt: 'Four students of the capstone team standing in front of their project poster at school',
+    title: 'The team',
+    meta: 'Capstone · STEM October',
+    ratio: '4 / 3',
+    span: 'wide',
+  },
+  {
+    src: '/img/archive/build-2.jpg',
+    alt: 'The greenhouse prototype under a clear plastic dome, with an LCD showing live temperature and humidity',
+    title: 'Live telemetry',
+    meta: 'Sprout · temperature, humidity, light',
+    ratio: '4 / 3',
+  },
+  {
+    src: '/img/archive/contest-1.jpg',
+    alt: 'Three contestants in maroon ACPC shirts seated at a terminal in a crowded contest hall',
+    title: 'Team 3014',
+    meta: 'Programming contest, Cairo',
+    ratio: '3 / 2',
+  },
+  {
+    src: '/img/archive/model-1.jpg',
+    alt: 'Blender viewport showing rows of plants modelled in a field layout',
+    title: 'Field layout study',
+    meta: 'Pest Sentinel · Blender',
+    ratio: '16 / 9',
+  },
+  {
+    src: '/img/archive/build-4.jpg',
+    alt: 'The greenhouse dome lit from inside by a bulb during a night test',
+    title: 'Night test',
+    meta: 'Sprout · lighting relay',
+    ratio: '4 / 3',
+    span: 'tall',
+  },
+  {
+    src: '/img/archive/contest-2.jpg',
+    alt: 'Three students holding their contestant badges on a lawn at night, city lights behind them',
+    title: 'After the floor',
+    meta: 'Same three, same night',
+    ratio: '4 / 3',
+  },
+  {
+    src: '/img/archive/build-1.jpg',
+    alt: 'Close view of the greenhouse interior with wiring, a fan and a sensor bundle',
+    title: 'Wiring, third revision',
+    meta: 'Sprout · sensors and relays',
+    ratio: '4 / 3',
+  },
+  {
+    src: '/img/archive/model-2.jpg',
+    alt: 'Detailed Blender render of a single planted row with modelled leaves',
+    title: 'Row detail',
+    meta: 'Pest Sentinel · plant instances',
+    ratio: '4 / 3',
+  },
+  {
+    src: '/img/metu-stadium.jpg',
+    alt: 'The letters ODTÜ spelled across the concrete steps of the METU stadium under a blue sky',
+    title: 'ODTÜ',
+    meta: 'Stadium, Ankara',
+    ratio: '3 / 4',
+    span: 'tall',
+  },
+  {
+    src: '/img/archive/build-3.jpg',
+    alt: 'A laptop showing the Sprout interface: a cartoon plant, a chat field and sensor readings',
+    title: 'Companion interface',
+    meta: 'Sprout · chat and sensor panel',
+    ratio: '16 / 9',
+    span: 'wide',
+  },
+]
+
+/* ── 06 · METU ────────────────────────────────────────── */
+
+export const METU = {
   coordinates: '39.93° N — 32.85° E',
   title: 'Ankara',
-  lead: 'One university, one city, one plan.',
+  year: '2027.',
+  lead: 'Two certificates, no campus visit, one plan.',
   body: [
-    'I have never been to Ankara. Everything I know about METU I know from its work: a campus built around a forest, a computer engineering department that treats research as something you build with your hands, and graduates who go on to solve problems that are bigger than one country.',
-    'That is the kind of engineer I am trying to become. Not the kind who stops at a notebook. The kind who builds a rover, drives it into a pipe, and comes back with the frame that proves the crack is there.',
-    'Türkiye Bursları is how I get there. METU is why.',
+    'The only things METU has sent me so far are certificates: a course in artificial intelligence that I finished in November, and fifty logo-pair judgements for a perception study it runs with Queensland University of Technology. Both are small. Both are why I stopped treating METU as a ranking and started treating it as a place.',
+    'What I want from a university is a lab where the work leaves the screen. A computer engineering department whose systems end up inside machines. A campus that is a forest with a university in it. Graduates who solve problems that do not stop at a border. That is the shape of engineer I am trying to become — not the kind who stops at a notebook, the kind who drives a rover into a pipe and comes back with the frame that proves the crack.',
+    'Türkiye Bursları is the route. METU is the destination. If I am given four years, I will spend them the way I spent the last three: build the thing, then prove it works.',
+  ],
+  evidence: [
+    {
+      image: '/img/certs/metu-ai.jpg',
+      alt: 'METU certificate of completion for the Herkes için Yapay Zeka I course',
+      title: 'Herkes için Yapay Zeka I',
+      org: 'METU · Bilgeİş',
+      date: '12 November 2026',
+      note: 'A METU online course in artificial intelligence, completed and signed by the rector.',
+    },
+    {
+      image: '/img/certs/metu-study.jpg',
+      alt: 'Certificate of participation in the logo similarity user study by QUT and METU',
+      title: 'Logo similarity study',
+      org: 'QUT × METU',
+      date: '12 November 2026',
+      note: 'Fifty logo-pair judgements for a joint perception study — small, but the kind of work I want four years of.',
+    },
   ],
 }
 
-/* ── timeline ─────────────────────────────────────────── */
+/* ── 08 · journey ─────────────────────────────────────── */
+
 export const TIMELINE = [
   {
     year: '2023—2026',
     what: 'STEM High School for Boys — 6th of October',
     sub: 'Admitted at 15: 98% on the entrance exam, ranked 245 of ~40,000 candidates',
     note: '6th of October City, Egypt',
+  },
+  {
+    year: '2023—2026',
+    what: 'Resala — STEM leader, Sadat City',
+    sub: 'Mentoring local students in hands-on science and engineering',
+    note: 'Volunteering',
+  },
+  {
+    year: '2024',
+    what: 'Physics Brawl Online — team place 324',
+    sub: 'Category C, 14th international online competition, Charles University',
+    note: 'Team “The Incredibles”',
+  },
+  {
+    year: '2024—',
+    what: 'Hack Club — software engineer',
+    sub: 'Building projects that solve real problems, with the global Hack Club network',
+    note: 'Community',
+  },
+  {
+    year: '2025',
+    what: 'NASA Space Apps Challenge',
+    sub: '“Galactic Problem Solver” — outstanding participation',
+    note: 'NASA International Space Apps',
+  },
+  {
+    year: '2025—2026',
+    what: 'Pipe Inspector — grade 12 capstone',
+    sub: 'A rover and a segmentation model for corrosion inside pipes',
+    note: 'Year-long build',
   },
   {
     year: '2026',
@@ -215,6 +433,12 @@ export const TIMELINE = [
   },
   {
     year: '2026',
+    what: 'Programming instructor, Egyptian Culture Palace',
+    sub: 'Designed and taught a Python and computer science course for primary school students',
+    note: 'Volunteering',
+  },
+  {
+    year: '2026',
     what: 'STEM Model Arab League — Head of IT',
     sub: 'Leading the IT and machine-learning track',
     note: 'Leadership',
@@ -226,16 +450,10 @@ export const TIMELINE = [
     note: 'Research tooling',
   },
   {
-    year: '2025—2026',
-    what: 'Resala — STEM leader, Sadat City',
-    sub: 'Mentoring local students in hands-on science and engineering',
-    note: 'Volunteering',
-  },
-  {
-    year: '2024—',
-    what: 'Hack Club — software engineer',
-    sub: 'Building projects that solve real problems, with the global Hack Club network',
-    note: 'Community',
+    year: '2026',
+    what: 'METU · Herkes için Yapay Zeka I',
+    sub: 'Artificial intelligence course completed through METU’s Bilgeİş programme',
+    note: 'Middle East Technical University',
   },
 ]
 
@@ -279,7 +497,7 @@ export const TOOLKIT = [
       { name: 'LaTeX', note: '' },
       { name: 'Technical writing', note: '' },
       { name: 'Poster design', note: '' },
-      { name: 'Mentoring', note: '' },
+      { name: 'Teaching', note: '' },
       { name: 'Arabic', note: 'native' },
       { name: 'English', note: 'fluent' },
     ],

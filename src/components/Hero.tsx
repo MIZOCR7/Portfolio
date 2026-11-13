@@ -60,13 +60,13 @@ export default function Hero() {
               <div className="portrait-frame">
                 <img
                   src="/img/portrait.jpg"
-                  alt="Ziad Emad Ahmed at the International Science and Engineering Fair"
-                  width={800}
-                  height={1000}
+                  alt="Studio portrait of Ziad Emad Ahmed"
+                  width={720}
+                  height={900}
                   fetchPriority="high"
                   decoding="async"
                 />
-                <span className="portrait-tag">Science fair, 2026</span>
+                <span className="portrait-tag">6th of October, 2026</span>
               </div>
             </div>
             <p className="portrait-caption">

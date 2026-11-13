@@ -112,7 +112,7 @@ export default function Work() {
     <section className="section" id="work">
       <div className="wrap">
         <div className="section-head">
-          <p className="label mono">01 — Selected work</p>
+          <p className="label mono">02 — Selected work</p>
           <div>
             <h2 className="section-title reveal-mask">
               <span className="line">

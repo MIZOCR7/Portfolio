@@ -2,10 +2,12 @@ import { useEffect } from 'react'
 import Nav from './components/Nav'
 import Cursor from './components/Cursor'
 import Hero from './components/Hero'
+import About from './components/About'
 import Work from './components/Work'
 import Capstone from './components/Capstone'
 import Recognition from './components/Recognition'
-import Ankara from './components/Ankara'
+import Archive from './components/Archive'
+import Metu from './components/Metu'
 import Toolkit from './components/Toolkit'
 import Resume from './components/Resume'
 import Contact from './components/Contact'
@@ -59,10 +61,12 @@ export default function App() {
             ))}
           </div>
         </div>
+        <About />
         <Work />
         <Capstone />
         <Recognition />
-        <Ankara />
+        <Archive />
+        <Metu />
         <Toolkit />
         <Resume />
         <Contact />

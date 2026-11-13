@@ -1,12 +1,12 @@
 import type { CSSProperties } from 'react'
-import { CASE_COLUMNS, STATS } from '../data'
+import { CASE_COLUMNS, FEATURE, STATS } from '../data'
 
 export default function Capstone() {
   return (
     <section className="section section--ink" id="capstone">
       <div className="wrap">
         <div className="section-head">
-          <p className="label mono">02 — Case study</p>
+          <p className="label mono">03 — Case study</p>
           <div>
             <h2 className="section-title reveal-mask">
               <span className="line">
@@ -37,6 +37,23 @@ export default function Capstone() {
             decoding="async"
           />
           <figcaption>Raw inspection footage · the model has to read all four of these</figcaption>
+        </figure>
+
+        <figure className="demo reveal">
+          <video
+            className="demo-video"
+            src={FEATURE.video}
+            poster={FEATURE.poster}
+            controls
+            playsInline
+            preload="none"
+            width={640}
+            height={360}
+          />
+          <figcaption>
+            <span>{FEATURE.videoNote}</span>
+            <span>Press play · no audio, this is a machine looking at a wall</span>
+          </figcaption>
         </figure>
 
         <div className="stats reveal">

@@ -6,7 +6,7 @@ export default function Toolkit() {
     <section className="section" id="toolkit">
       <div className="wrap">
         <div className="section-head">
-          <p className="label mono">05 — Toolkit</p>
+          <p className="label mono">07 — Toolkit</p>
           <div>
             <h2 className="section-title reveal-mask">
               <span className="line">

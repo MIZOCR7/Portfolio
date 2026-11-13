@@ -3,10 +3,10 @@ import { TIMELINE } from '../data'
 
 export default function Resume() {
   return (
-    <section className="section section--deep" id="resume">
+    <section className="section section--deep" id="journey">
       <div className="wrap">
         <div className="section-head">
-          <p className="label mono">06 — Résumé</p>
+          <p className="label mono">08 — Journey</p>
           <div>
             <h2 className="section-title reveal-mask">
               <span className="line">
@@ -19,7 +19,8 @@ export default function Resume() {
               </span>
             </h2>
             <p className="section-sub reveal">
-              A short version of the CV. Press the PDF button in the corner for a clean one-page printout.
+              The short version of the CV, in order. Press the PDF button in the corner for a clean one-page
+              printout.
             </p>
           </div>
         </div>
