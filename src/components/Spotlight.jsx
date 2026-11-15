@@ -2,14 +2,19 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { CONFIG } from '../config'
 
 const APP_ITEMS = [
-  { id: 'work', label: 'Work', kind: 'Application', keywords: 'projects finder portfolio', icon: 'images/icons/finder.png' },
-  { id: 'about', label: 'About Ziad', kind: 'Application', keywords: 'biography profile me', icon: 'images/icons/contacts.png' },
-  { id: 'notes', label: 'Notes', kind: 'Application', keywords: 'writing now toolkit', icon: 'images/icons/notes.png' },
-  { id: 'photos', label: 'Images', kind: 'Application', keywords: 'photos gallery pictures', icon: 'images/icons/photos.png' },
-  { id: 'social', label: 'Social', kind: 'Application', keywords: 'links github linkedin contact', icon: 'images/icons/safari.png' },
+  { id: 'folder:projects', label: 'Projects', kind: 'Folder', keywords: 'work builds finder portfolio pipe pest sprout', icon: 'images/icons/folder.png' },
+  { id: 'folder:about-me', label: 'About Me', kind: 'Folder', keywords: 'biography cv certifications honors experience photos', icon: 'images/icons/folder.png' },
+  { id: 'about', label: 'About Me.txt', kind: 'Document', keywords: 'biography story profile me', icon: 'images/icons/textedit.png' },
+  { id: 'certifications', label: 'Certifications', kind: 'Documents', keywords: 'certificates isef icpc nasa ibm earth hack club network schoolhouse be my eyes', icon: 'images/icons/preview.png' },
+  { id: 'honors', label: 'Honors', kind: 'Documents', keywords: 'awards recognition wins place leadership service', icon: 'images/icons/apps.png' },
+  { id: 'experience', label: 'Experience', kind: 'Document', keywords: 'cv roles teaching service schoolhouse culture palace', icon: 'images/icons/notes.png' },
+  { id: 'skills', label: 'Skills', kind: 'Document', keywords: 'stack tools python pytorch yolo react languages', icon: 'images/icons/terminal.png' },
+  { id: 'notes', label: 'Notes', kind: 'Application', keywords: 'writing now toolkit story process', icon: 'images/icons/notes.png' },
+  { id: 'photos', label: 'Photos', kind: 'Application', keywords: 'photos gallery pictures portrait', icon: 'images/icons/photos.png' },
+  { id: 'social', label: 'Social', kind: 'Application', keywords: 'links github linkedin instagram contact', icon: 'images/icons/safari.png' },
   { id: 'contact', label: 'Mail', kind: 'Application', keywords: 'email contact hire', icon: 'images/icons/mail.png' },
   { id: 'resume', label: 'Résumé', kind: 'Application', keywords: 'cv curriculum vitae resume print', icon: 'images/icons/preview.png' },
-  { id: 'terminal', label: 'Terminal', kind: 'Application', keywords: 'shell command cli zsh', icon: 'images/icons/image-capture.png' },
+  { id: 'terminal', label: 'AI Terminal', kind: 'Application', keywords: 'shell command cli zsh ai gemini ask live help', icon: 'images/icons/terminal.png' },
 ]
 
 export default function Spotlight({ open, onClose, onOpen, onLink, onReset, onNextWallpaper }) {
@@ -53,7 +58,7 @@ export default function Spotlight({ open, onClose, onOpen, onLink, onReset, onNe
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return items.filter(i => i.id.startsWith('project:') || i.id.startsWith('app:')).slice(0, 9)
+    if (!q) return items.filter(i => i.id.startsWith('app:')).slice(0, 9)
     return items
       .filter(i => `${i.label} ${i.kind} ${i.keywords || ''}`.toLowerCase().includes(q))
       .slice(0, 10)

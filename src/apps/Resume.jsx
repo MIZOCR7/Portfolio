@@ -38,6 +38,7 @@ export default function Resume() {
             <a href={`mailto:${site.email}`} className="underline decoration-[#bbb] underline-offset-2">{site.email}</a>
             <a href={site.github} className="underline decoration-[#bbb] underline-offset-2">github.com/MIZOCR7</a>
             <a href={site.linkedin} className="underline decoration-[#bbb] underline-offset-2">linkedin.com/in/ziad-emad</a>
+            <a href={site.instagram} className="underline decoration-[#bbb] underline-offset-2">instagram.com/zes79586</a>
           </p>
         </header>
 
@@ -76,13 +77,15 @@ export default function Resume() {
 
         <Section title="Experience & leadership">
           <div className="space-y-2">
-            {CONFIG.about.timeline.slice(2).map(item => (
-              <div key={item.what}>
+            {CONFIG.experience.slice(0, 4).map(item => (
+              <div key={`${item.role}-${item.org}`}>
                 <div className="flex items-baseline justify-between gap-3">
-                  <h3 className="text-[12px] font-semibold">{item.what}</h3>
-                  <span className="whitespace-nowrap font-mono text-[10.5px] text-[#666]">{item.year}</span>
+                  <h3 className="text-[12px] font-semibold">
+                    {item.role} <span className="font-normal text-[#555]">— {item.org}</span>
+                  </h3>
+                  <span className="whitespace-nowrap font-mono text-[10.5px] text-[#666]">{item.period}</span>
                 </div>
-                <p className="text-[11.5px] leading-[1.5] text-[#444]">{item.sub}</p>
+                <p className="text-[11.5px] leading-[1.5] text-[#444]">{item.detail}</p>
               </div>
             ))}
           </div>
@@ -90,11 +93,11 @@ export default function Resume() {
 
         <Section title="Honours">
           <ul className="list-disc space-y-0.5 pl-4 text-[11.5px] leading-[1.5] text-[#333]">
-            <li>ISEF-affiliated Egypt Science & Engineering Fair — national finalist, 2026</li>
-            <li>ICPC Egyptian Teens — 31st place, online qualification, 2026</li>
-            <li>NASA Space Apps Challenge — “Galactic Problem Solver”, 2025</li>
-            <li>IBM Machine Learning — professional certificate, 2025</li>
-            <li>Physics Brawl Online — team place 324, category C, 2024</li>
+            {CONFIG.honors.slice(0, 7).map(h => (
+              <li key={h.title}>
+                {h.title} — {h.org}, {h.year}
+              </li>
+            ))}
           </ul>
         </Section>
 

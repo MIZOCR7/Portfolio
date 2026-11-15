@@ -23,7 +23,7 @@ export default function Social({ onLink }) {
           <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[var(--dim)]">Elsewhere</p>
           <h1 className="mt-1 text-[24px] font-semibold tracking-[-0.025em]">Find me online</h1>
           <p className="mt-1 max-w-[52ch] text-[12.5px] leading-relaxed text-[var(--dim)]">
-            Repositories, the professional profile, and the fastest way to reach me. Every link opens in a new tab.
+            Repositories, the professional profile, Instagram, and the fastest way to reach me. Every link opens in a new tab.
           </p>
         </div>
 
@@ -48,7 +48,7 @@ export default function Social({ onLink }) {
 
           <div className="rounded-[11px] border border-dashed border-[var(--line)] p-4 text-[11.5px] leading-relaxed text-[var(--dim)]">
             <p className="mb-1 font-semibold text-[var(--fg)]">Also on file</p>
-            NASA Space Apps · The Earth Prize · IBM Machine Learning · Schoolhouse peer tutoring. Certificates live in Work → Awards.
+            NASA Space Apps · The Earth Prize · IBM Machine Learning · Schoolhouse peer tutoring · Be My Eyes. Every certificate now lives in About Me → Certifications.
           </div>
         </div>
 

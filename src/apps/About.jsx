@@ -7,7 +7,7 @@ export default function About({ onOpenApp }) {
     <div className="h-full overflow-y-auto">
       <div className="border-b border-[var(--line)] bg-[var(--win-2)] px-6 py-5 sm:px-8">
         <div className="flex items-start gap-4">
-          <span className="h-[86px] w-[86px] flex-none overflow-hidden rounded-full shadow-md ring-1 ring-black/10">
+          <span className="h-[104px] w-[104px] flex-none overflow-hidden rounded-[18px] shadow-md ring-1 ring-black/10">
             <Media
               src={about.portrait}
               alt={about.portraitAlt}
@@ -15,13 +15,30 @@ export default function About({ onOpenApp }) {
               fallback={<span className="block h-full w-full bg-[var(--hover)]" />}
             />
           </span>
-          <div className="min-w-0">
-            <h1 className="text-[25px] font-semibold leading-tight tracking-[-0.025em]">{site.name}</h1>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-[26px] font-semibold leading-tight tracking-[-0.025em]">{site.name}</h1>
             <p className="text-[13px] text-[var(--dim)]">{site.role}</p>
-            <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-[#30d158]/15 px-2 py-[2px] text-[10.5px] font-semibold text-[#1f9d45] dark:text-[#4cd964]">
-              <span className="h-[6px] w-[6px] rounded-full bg-current" /> {site.status}
+            <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#30d158]/15 px-2 py-[2px] text-[10.5px] font-semibold text-[#1f9d45] dark:text-[#4cd964]">
+                <span className="h-[6px] w-[6px] rounded-full bg-current" /> {site.status}
+              </span>
+              <span className="rounded-full bg-[var(--hover)] px-2 py-[2px] text-[10.5px] text-[var(--dim)]">
+                {site.age} · Grade 12
+              </span>
+            </div>
+            <p className="mt-1.5 text-[11.5px] text-[var(--dim)]">
+              {site.location} · {site.availability}
             </p>
-            <p className="mt-1.5 text-[11.5px] text-[var(--dim)]">{site.location} · {site.availability}</p>
+            <a
+              href={site.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] bg-[var(--win)] px-2.5 py-1 text-[11px] font-medium hover:bg-[var(--hover)]"
+            >
+              <img src="icons/instagram.svg" alt="" className="h-3.5 w-3.5" />
+              {site.instagramHandle}
+              <span className="text-[var(--dim)]">↗</span>
+            </a>
           </div>
         </div>
       </div>
@@ -33,6 +50,37 @@ export default function About({ onOpenApp }) {
           {about.paragraphs.map(p => (
             <p key={p.slice(0, 24)}>{p}</p>
           ))}
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => onOpenApp('certifications')}
+            className="rounded-[7px] bg-[#0a84ff] px-3.5 py-1.5 text-[12.5px] font-medium text-white hover:brightness-110"
+          >
+            Certifications
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenApp('honors')}
+            className="rounded-[7px] border border-[var(--line)] bg-[var(--win-2)] px-3.5 py-1.5 text-[12.5px] font-medium hover:bg-[var(--hover)]"
+          >
+            Honors
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenApp('experience')}
+            className="rounded-[7px] border border-[var(--line)] bg-[var(--win-2)] px-3.5 py-1.5 text-[12.5px] font-medium hover:bg-[var(--hover)]"
+          >
+            Experience
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenApp('terminal')}
+            className="rounded-[7px] border border-[#30d158]/40 bg-[#30d158]/10 px-3.5 py-1.5 text-[12.5px] font-medium hover:bg-[#30d158]/15"
+          >
+            Ask my AI
+          </button>
         </div>
 
         <section>
@@ -64,7 +112,7 @@ export default function About({ onOpenApp }) {
           <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--dim)]">Journey</h2>
           <ol className="space-y-3 border-l border-[var(--line)] pl-4">
             {about.timeline.map(item => (
-              <li key={item.what} className="relative">
+              <li key={`${item.year}-${item.what}`} className="relative">
                 <span className="absolute -left-[21px] top-[5px] h-[7px] w-[7px] rounded-full bg-[#0a84ff]" />
                 <p className="font-mono text-[10.5px] text-[var(--dim)]">{item.year}</p>
                 <p className="text-[13px] font-semibold">{item.what}</p>
@@ -78,6 +126,9 @@ export default function About({ onOpenApp }) {
         <div className="flex flex-wrap gap-2 pb-2">
           <a href={`mailto:${site.email}`} className="rounded-[7px] bg-[#0a84ff] px-3.5 py-1.5 text-[12.5px] font-medium text-white hover:brightness-110">
             Email Ziad
+          </a>
+          <a href={site.instagram} target="_blank" rel="noopener noreferrer" className="rounded-[7px] border border-[var(--line)] bg-[var(--win-2)] px-3.5 py-1.5 text-[12.5px] font-medium hover:bg-[var(--hover)]">
+            Instagram ↗
           </a>
           <a href={site.github} target="_blank" rel="noopener noreferrer" className="rounded-[7px] border border-[var(--line)] bg-[var(--win-2)] px-3.5 py-1.5 text-[12.5px] font-medium hover:bg-[var(--hover)]">
             GitHub ↗

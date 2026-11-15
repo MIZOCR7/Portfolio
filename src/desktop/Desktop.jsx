@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { CONFIG, appWindows } from '../config'
-import { useClock, useMotionPreference, useMedia, useStored, useViewport } from '../lib/hooks'
+import { useClock, useMotionPreference, useStored, useViewport } from '../lib/hooks'
 import MenuBar from '../components/MenuBar'
 import Dock from '../components/Dock'
 import ClockWidget from '../components/ClockWidget'
@@ -9,9 +9,13 @@ import Window from '../components/Window'
 import Launchpad from '../components/Launchpad'
 import Spotlight from '../components/Spotlight'
 import ControlCenter from '../components/ControlCenter'
-import Work from '../apps/Work'
+import Folder from '../apps/Folder'
 import Project from '../apps/Project'
 import About from '../apps/About'
+import Certifications from '../apps/Certifications'
+import Honors from '../apps/Honors'
+import Experience from '../apps/Experience'
+import Skills from '../apps/Skills'
 import Notes from '../apps/Notes'
 import Photos from '../apps/Photos'
 import Social from '../apps/Social'
@@ -21,7 +25,6 @@ import Terminal from '../apps/Terminal'
 import Viewer from '../apps/Viewer'
 import Shortcuts from '../apps/Shortcuts'
 
-const DOCK_IDS = { work: 'work', about: 'about', notes: 'notes', photos: 'photos', social: 'social', contact: 'contact' }
 const MENU_H = 30
 
 export default function Desktop() {
@@ -35,7 +38,7 @@ export default function Desktop() {
   const [wallpaperId, setWallpaperId] = useStored('ziad-wallpaper', CONFIG.defaultWallpaper)
   const [motionOff, setMotionOff] = useStored('ziad-motion-off', false)
   const [dockSize, setDockSize] = useStored('ziad-dock-size', 58)
-  const [layout, setLayout] = useStored('ziad-desk-layout-v1', {})
+  const [layout, setLayout] = useStored('ziad-desk-layout-v2', {})
   const reduce = motionOff || systemReduce
 
   const [windows, setWindows] = useState([])
@@ -66,14 +69,16 @@ export default function Desktop() {
     document.documentElement.classList.toggle('reduce-motion', reduce)
   }, [reduce])
 
-  /* measure the icon canvas directly; the listener is the reliable path,
-     ResizeObserver is only a backup for layout changes without a resize. */
   useLayoutEffect(() => {
     const measure = () => {
       const el = areaRef.current
       if (!el) return
       const r = el.getBoundingClientRect()
-      setArea(prev => (Math.abs(prev.w - r.width) < 0.5 && Math.abs(prev.h - r.height) < 0.5 ? prev : { w: r.width, h: r.height }))
+      setArea(prev =>
+        Math.abs(prev.w - r.width) < 0.5 && Math.abs(prev.h - r.height) < 0.5
+          ? prev
+          : { w: r.width, h: r.height }
+      )
     }
     measure()
     window.addEventListener('resize', measure)
@@ -89,7 +94,6 @@ export default function Desktop() {
     }
   }, [mobile])
 
-  /* soft pointer parallax that stops when the tab is hidden or motion is off */
   useEffect(() => {
     if (reduce || mobile) return
     let raf = 0
@@ -97,7 +101,8 @@ export default function Desktop() {
     let ty = 0
     const apply = () => {
       raf = 0
-      if (wallpaperRef.current) wallpaperRef.current.style.transform = `scale(1.045) translate3d(${tx}px, ${ty}px, 0)`
+      if (wallpaperRef.current)
+        wallpaperRef.current.style.transform = `scale(1.045) translate3d(${tx}px, ${ty}px, 0)`
     }
     const onMove = e => {
       if (document.hidden) return
@@ -121,9 +126,7 @@ export default function Desktop() {
 
   const focus = useCallback(key => {
     setWindows(prev =>
-      prev.map(w =>
-        w.key === key ? { ...w, minimized: false, z: ++zRef.current } : w
-      )
+      prev.map(w => (w.key === key ? { ...w, minimized: false, z: ++zRef.current } : w))
     )
   }, [])
 
@@ -132,12 +135,22 @@ export default function Desktop() {
       const conf = appWindows[app]
       if (!conf) return
       const key =
-        app === 'project' ? `project:${data}` : app === 'viewer' ? `viewer:${data.src}` : app
+        app === 'folder'
+          ? `folder:${data}`
+          : app === 'project'
+            ? `project:${data}`
+            : app === 'viewer'
+              ? `viewer:${data?.src}`
+              : app
 
       setWindows(prev => {
         const found = prev.find(w => w.key === key)
-        if (found) return prev.map(w => (w.key === key ? { ...w, minimized: false, z: ++zRef.current } : w))
+        if (found)
+          return prev.map(w =>
+            w.key === key ? { ...w, minimized: false, z: ++zRef.current } : w
+          )
         const project = app === 'project' ? CONFIG.projects.find(p => p.id === data) : null
+        const folder = app === 'folder' ? CONFIG.folders[data] : null
         const width = Math.min(conf.w, viewport.w - 24)
         const height = Math.min(conf.h, viewport.h - MENU_H - 92)
         const n = prev.length % 5
@@ -150,9 +163,11 @@ export default function Desktop() {
             title:
               app === 'project'
                 ? project?.title || 'Project'
-                : app === 'viewer'
-                  ? data.title || 'Preview'
-                  : conf.title,
+                : app === 'folder'
+                  ? folder?.title || 'Finder'
+                  : app === 'viewer'
+                    ? data?.title || 'Preview'
+                    : conf.title,
             data,
             x: Math.max(8, Math.round((viewport.w - width) / 2 + (n - 2) * 28)),
             y: Math.max(MENU_H + 8, 44 + n * 24),
@@ -169,10 +184,12 @@ export default function Desktop() {
     [viewport.w, viewport.h]
   )
 
-  /* Launchpad and Spotlight hand back either an app id or `project:<id>` */
   const launch = useCallback(
     target => {
-      if (typeof target === 'string' && target.startsWith('project:')) return open('project', target.slice(8))
+      if (typeof target === 'string' && target.startsWith('project:'))
+        return open('project', target.slice(8))
+      if (typeof target === 'string' && target.startsWith('folder:'))
+        return open('folder', target.slice(7))
       return open(target)
     },
     [open]
@@ -180,12 +197,12 @@ export default function Desktop() {
 
   const close = useCallback(key => {
     setWindows(prev => {
-      const target = prev.find(w => w.key === key)
       const next = prev.filter(w => w.key !== key)
       const opener = openers.current.get(key)
       openers.current.delete(key)
       window.requestAnimationFrame(() => {
-        if (opener && document.contains(opener) && !opener.disabled) opener.focus?.({ preventScroll: true })
+        if (opener && document.contains(opener) && !opener.disabled)
+          opener.focus?.({ preventScroll: true })
         else {
           const top = [...next].filter(w => !w.minimized).sort((a, b) => b.z - a.z)[0]
           if (top) document.querySelector(`[data-window="${CSS.escape(top.key)}"]`)?.focus?.()
@@ -214,26 +231,37 @@ export default function Desktop() {
   )
 
   const toggleApp = useCallback(
-    id => {
-      const app = DOCK_IDS[id]
-      if (!app) return
-      const existing = windows.find(w => w.app === app)
+    (id, item) => {
+      const app = item?.app || id
+      const key = item?.windowKey || (app === 'folder' ? `folder:${item?.data}` : app)
+      const existing = windows.find(w => w.key === key)
       if (existing) {
         if (existing.minimized) focus(existing.key)
         else if (topWindow?.key === existing.key) minimize(existing.key)
         else focus(existing.key)
       } else {
-        open(app)
+        if (app === 'folder') open('folder', item?.data)
+        else open(app)
       }
     },
     [windows, topWindow, focus, minimize, open]
+  )
+
+  const openItem = useCallback(
+    id => {
+      const item = CONFIG.desktopItems.find(i => i.id === id)
+      if (!item) return
+      if (item.type === 'folder') open('folder', item.folder)
+      else if (item.type === 'terminal') open('terminal')
+    },
+    [open]
   )
 
   const resetLayout = useCallback(() => {
     setLayout({})
     setSelected(null)
     try {
-      window.localStorage.removeItem('ziad-desk-layout-v1')
+      window.localStorage.removeItem('ziad-desk-layout-v2')
     } catch {
       /* ignore */
     }
@@ -247,9 +275,8 @@ export default function Desktop() {
     notify(`Wallpaper: ${next.label}`)
   }, [wallpaper.id, setWallpaperId, notify])
 
-  const running = useMemo(() => [...new Set(windows.map(w => w.app))], [windows])
+  const running = useMemo(() => windows.map(w => w.key), [windows])
 
-  /* global shortcuts */
   useEffect(() => {
     const onKey = e => {
       const meta = e.metaKey || e.ctrlKey
@@ -263,9 +290,14 @@ export default function Desktop() {
         setSpotlight(v => !v)
         return
       }
+      if (meta && (e.key === 't' || e.key === 'T')) {
+        e.preventDefault()
+        open('terminal')
+        return
+      }
       if (meta && e.key === '1') {
         e.preventDefault()
-        open('work')
+        open('folder', 'projects')
         return
       }
       if (meta && e.key === '2') {
@@ -301,8 +333,8 @@ export default function Desktop() {
 
   const positions = useMemo(() => {
     const out = {}
-    CONFIG.projects.forEach(p => {
-      out[p.id] = layout[p.id] || CONFIG.iconSeeds[p.id] || { x: 0.1, y: 0.1 }
+    CONFIG.desktopItems.forEach(item => {
+      out[item.id] = layout[item.id] || CONFIG.iconSeeds[item.id] || { x: 0.1, y: 0.1 }
     })
     return out
   }, [layout])
@@ -312,12 +344,16 @@ export default function Desktop() {
   }
 
   const renderApp = win => {
-    if (win.app === 'work') {
+    if (win.app === 'folder') {
       return (
-        <Work
+        <Folder
+          folderId={win.data}
+          mobile={mobile}
           onOpenProject={id => open('project', id)}
-          onView={item => open('viewer', item)}
           onOpenApp={app => open(app)}
+          onOpenFolder={id => open('folder', id)}
+          onView={item => open('viewer', item)}
+          onLink={openLink}
         />
       )
     }
@@ -326,13 +362,26 @@ export default function Desktop() {
       return project ? <Project project={project} onView={item => open('viewer', item)} /> : null
     }
     if (win.app === 'about') return <About onOpenApp={app => open(app)} />
+    if (win.app === 'certifications')
+      return <Certifications onView={item => open('viewer', item)} />
+    if (win.app === 'honors') return <Honors onView={item => open('viewer', item)} />
+    if (win.app === 'experience')
+      return <Experience onOpenApp={app => open(app)} />
+    if (win.app === 'skills') return <Skills onOpenApp={app => open(app)} />
     if (win.app === 'notes') return <Notes />
     if (win.app === 'photos') return <Photos onView={item => open('viewer', item)} />
     if (win.app === 'social') return <Social onLink={openLink} />
     if (win.app === 'contact') return <Contact onCopy={notify} />
     if (win.app === 'resume') return <Resume />
     if (win.app === 'terminal') {
-      return <Terminal onOpenProject={id => open('project', id)} onOpenApp={app => open(app)} />
+      return (
+        <Terminal
+          onOpenProject={id => open('project', id)}
+          onOpenApp={app => open(app)}
+          onOpenFolder={id => open('folder', id)}
+          onLink={openLink}
+        />
+      )
     }
     if (win.app === 'viewer') return <Viewer item={win.data} />
     if (win.app === 'shortcuts') return <Shortcuts />
@@ -351,7 +400,10 @@ export default function Desktop() {
         fetchPriority="high"
         draggable={false}
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/30" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/30"
+        aria-hidden="true"
+      />
 
       <MenuBar
         clock={clock}
@@ -372,9 +424,10 @@ export default function Desktop() {
         compact={mobile}
       />
 
-      {/* desktop identity — bottom left on large screens, a small header on phones */}
       <div className="pointer-events-none absolute bottom-[112px] left-6 z-[4] hidden max-w-[340px] select-none rounded-[18px] border border-white/20 bg-black/25 p-4 text-white shadow-[0_18px_40px_rgba(0,0,0,0.25)] backdrop-blur-2xl lg:block">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/60">Portfolio · 2026</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/60">
+          Portfolio · 2026
+        </p>
         <h1 className="mt-1 text-[36px] font-semibold leading-none tracking-[-0.035em] drop-shadow-sm">
           {CONFIG.site.name}
         </h1>
@@ -403,62 +456,100 @@ export default function Desktop() {
 
       <ClockWidget clock={clock} />
 
-      {/* icon canvas */}
       {!mobile ? (
         <div
           ref={areaRef}
           data-desk-area
-          aria-label="Desktop projects"
+          aria-label="Desktop folders and AI terminal"
           className="absolute inset-x-0 bottom-[104px] top-[36px] z-[6]"
           onClick={e => {
             if (e.target === e.currentTarget) setSelected(null)
           }}
         >
-          {CONFIG.projects.map(project => (
+          {CONFIG.desktopItems.map(item => (
             <DesktopIcon
-              key={project.id}
-              project={project}
-              position={positions[project.id]}
+              key={item.id}
+              item={item}
+              position={positions[item.id]}
               area={area}
               compact={false}
               small={compactIcons}
-              selected={selected === project.id}
-              dragging={dragging === project.id}
+              selected={selected === item.id}
+              dragging={dragging === item.id}
               onSelect={setSelected}
-              onOpen={id => open('project', id)}
+              onOpen={openItem}
               onMove={(id, pos) => setLayout(prev => ({ ...prev, [id]: pos }))}
               onDragState={setDragging}
             />
           ))}
+
+          <button
+            type="button"
+            onClick={() => open('terminal')}
+            className="group absolute bottom-0 right-4 z-[8] hidden w-[250px] rounded-[14px] border border-white/25 bg-black/30 p-3 text-left text-white shadow-[0_16px_40px_rgba(0,0,0,0.3)] backdrop-blur-2xl transition hover:-translate-y-0.5 hover:bg-black/40 md:block"
+          >
+            <div className="flex items-center gap-2.5">
+              <img
+                src="images/icons/terminal.png"
+                alt=""
+                className="h-10 w-10 flex-none object-contain drop-shadow"
+              />
+              <div className="min-w-0">
+                <p className="text-[12px] font-semibold">Ask my AI anything</p>
+                <p className="truncate text-[10.5px] text-white/60">Gemini · knows this portfolio</p>
+              </div>
+            </div>
+            <p className="mt-2 text-[10.5px] leading-relaxed text-white/65">
+              Projects, certificates, teaching, contact. Try{' '}
+              <span className="font-mono text-[#8ab4f8]">/help</span> or start a conversation with{' '}
+              <span className="font-mono text-[#8fe0aa]">/live</span>.
+            </p>
+          </button>
         </div>
       ) : (
         <div
           className="absolute inset-x-0 bottom-[calc(92px+env(safe-area-inset-bottom,0px))] top-[calc(118px+env(safe-area-inset-top,0px))] z-[6] overflow-y-auto px-3 pb-6"
-          aria-label="Projects"
+          aria-label="Projects and about"
         >
-          <p className="mb-3 px-1 text-[11px] text-white/65">Tap a cover to open it.</p>
-          <div className="grid grid-cols-2 gap-x-2 gap-y-5">
-            {CONFIG.projects.map(project => (
+          <p className="mb-3 px-1 text-[11px] text-white/65">
+            Two folders, one AI terminal. Tap to open.
+          </p>
+          <div className="grid grid-cols-2 gap-x-2 gap-y-4">
+            {CONFIG.desktopItems.map(item => (
               <DesktopIcon
-                key={project.id}
-                project={project}
+                key={item.id}
+                item={item}
                 position={{ x: 0, y: 0 }}
                 area={area}
                 compact
                 selected={false}
                 dragging={false}
                 onSelect={() => {}}
-                onOpen={id => open('project', id)}
+                onOpen={openItem}
                 onMove={() => {}}
                 onDragState={() => {}}
               />
             ))}
           </div>
+          <button
+            type="button"
+            onClick={() => open('terminal')}
+            className="mt-3 flex w-full items-center gap-3 rounded-[12px] border border-[#0a84ff]/50 bg-[#0a84ff]/20 p-3 text-left text-white backdrop-blur-md"
+          >
+            <img src="images/icons/terminal.png" alt="" className="h-9 w-9 object-contain" />
+            <span className="min-w-0 flex-1">
+              <span className="block text-[12px] font-semibold">Talk to Ziad AI</span>
+              <span className="block text-[10.5px] text-white/65">
+                Ask anything · /help · /live
+              </span>
+            </span>
+            <span className="text-[16px] text-white/60">›</span>
+          </button>
         </div>
       )}
 
       <Dock
-        running={running.filter(id => DOCK_IDS[id])}
+        running={running}
         onOpen={toggleApp}
         onLaunchpad={() => setLaunchpad(true)}
         onReset={resetLayout}
@@ -467,7 +558,6 @@ export default function Desktop() {
         compact={mobile}
       />
 
-      {/* windows */}
       <div className="pointer-events-none absolute inset-0 z-[300]">
         {windows.map(win => (
           <div key={win.key} className="pointer-events-auto contents">
@@ -511,7 +601,9 @@ export default function Desktop() {
 
       <div
         aria-live="polite"
-        className={`pointer-events-none fixed left-1/2 top-[44px] z-[700] -translate-x-1/2 rounded-[9px] border border-white/20 bg-[rgba(28,28,32,0.85)] px-4 py-2 text-[12px] font-medium text-white shadow-lg backdrop-blur-xl transition-all duration-200 ${toast ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}`}
+        className={`pointer-events-none fixed left-1/2 top-[44px] z-[700] -translate-x-1/2 rounded-[9px] border border-white/20 bg-[rgba(28,28,32,0.85)] px-4 py-2 text-[12px] font-medium text-white shadow-lg backdrop-blur-xl transition-all duration-200 ${
+          toast ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'
+        }`}
       >
         {toast}
       </div>

@@ -1,14 +1,9 @@
 import { useRef } from 'react'
-import Media from './Media'
 
-const WIDTHS = {
-  landscape: { wide: 196, mid: 158 },
-  square: { wide: 154, mid: 128 },
-  portrait: { wide: 138, mid: 114 },
-}
-
+/* A generic desktop tile: a folder, the AI terminal, or anything else.
+   It keeps the macOS double-click, drag, keyboard-nudge and local layout. */
 export default function DesktopIcon({
-  project,
+  item,
   position,
   area,
   compact,
@@ -22,15 +17,15 @@ export default function DesktopIcon({
 }) {
   const ref = useRef(null)
   const drag = useRef(null)
-  const width = WIDTHS[project.aspect][compact || small ? 'mid' : 'wide']
-  const iconH = project.aspect === 'portrait' ? Math.round(width * 1.33) : project.aspect === 'square' ? width : Math.round(width * 0.68)
+  const size = compact ? 72 : small ? 82 : 96
+  const boxH = size + (compact ? 8 : 26)
 
-  const left = 16 + position.x * Math.max(0, area.w - width - 32)
-  const top = 8 + position.y * Math.max(0, area.h - iconH - 44)
+  const left = 16 + position.x * Math.max(0, area.w - size - 32)
+  const top = 8 + position.y * Math.max(0, area.h - boxH - 20)
 
   const down = e => {
     if (compact || e.button !== 0) return
-    onSelect(project.id)
+    onSelect(item.id)
     e.currentTarget.setPointerCapture(e.pointerId)
     drag.current = {
       id: e.pointerId,
@@ -50,11 +45,11 @@ export default function DesktopIcon({
     if (!d.moved && Math.hypot(dx, dy) < 5) return
     if (!d.moved) {
       d.moved = true
-      onDragState(project.id)
+      onDragState(item.id)
     }
-    const maxX = Math.max(1, area.w - width - 32)
-    const maxY = Math.max(1, area.h - iconH - 44)
-    onMove(project.id, {
+    const maxX = Math.max(1, area.w - size - 32)
+    const maxY = Math.max(1, area.h - boxH - 20)
+    onMove(item.id, {
       x: Math.max(0, Math.min(1, d.px + dx / maxX)),
       y: Math.max(0, Math.min(1, d.py + dy / maxY)),
     })
@@ -71,7 +66,6 @@ export default function DesktopIcon({
       /* already released */
     }
     if (d.moved) {
-      // suppress the click that follows a drag
       ref.current?.setAttribute('data-dragged', '1')
       window.setTimeout(() => ref.current?.removeAttribute('data-dragged'), 0)
     }
@@ -81,19 +75,20 @@ export default function DesktopIcon({
     <button
       ref={ref}
       type="button"
-      aria-label={`${project.title} — ${project.kind}. Double-click or press Enter to open.`}
-      data-desk-id={project.id}
+      aria-label={`${item.label} — ${item.note || ''}. Double-click or press Enter to open.`}
+      data-desk-id={item.id}
       onPointerDown={down}
       onPointerMove={move}
       onPointerUp={up}
       onPointerCancel={up}
       onClick={() => {
-        if (compact) return onOpen(project.id)
+        if (compact) return onOpen(item.id)
         if (ref.current?.getAttribute('data-dragged')) return
-        onSelect(project.id)
+        onSelect(item.id)
       }}
-      onDoubleClick={() => onOpen(project.id)}
+      onDoubleClick={() => onOpen(item.id)}
       onKeyDown={e => {
+        if (compact) return
         const step = e.shiftKey ? 0.06 : 0.015
         const map = {
           ArrowLeft: [-step, 0],
@@ -103,21 +98,21 @@ export default function DesktopIcon({
         }
         if (map[e.key]) {
           e.preventDefault()
-          onMove(project.id, {
+          onMove(item.id, {
             x: Math.max(0, Math.min(1, position.x + map[e.key][0])),
             y: Math.max(0, Math.min(1, position.y + map[e.key][1])),
           })
         }
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault()
-          onOpen(project.id)
+          onOpen(item.id)
         }
       }}
       style={
         compact
           ? { width: '100%', touchAction: 'manipulation' }
           : {
-              width,
+              width: size + 10,
               left,
               top,
               transform: dragging ? 'scale(1.06)' : undefined,
@@ -125,39 +120,38 @@ export default function DesktopIcon({
             }
       }
       className={[
-        'desk-icon group flex flex-col items-center gap-1.5 rounded-lg p-1.5 text-center outline-none',
+        'desk-icon group flex flex-col items-center gap-1 rounded-lg p-1 text-center outline-none',
         compact ? 'relative w-full' : 'absolute',
         selected ? 'is-selected' : '',
         dragging ? 'is-dragging z-30' : 'z-10',
       ].join(' ')}
     >
       <span
-        className="desk-cover relative block w-full overflow-hidden rounded-[7px]"
-        style={
-          compact
-            ? { aspectRatio: project.aspect === 'portrait' ? '3 / 4' : project.aspect === 'square' ? '1 / 1' : '4 / 3', height: undefined }
-            : { height: iconH }
-        }
+        className="desk-glyph relative block flex-none"
+        style={{ width: size, height: size }}
       >
-        <Media
-          src={project.cover}
+        <img
+          src={item.icon}
           alt=""
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-          fallback={
-            <span
-              className={`flex h-full w-full items-center justify-center rounded-[7px] bg-gradient-to-br ${project.tileTone || 'from-neutral-600 to-neutral-900'}`}
-            >
-              <span className="font-mono text-[26px] font-semibold tracking-tight text-white/90">
-                {project.tile}
-              </span>
-            </span>
-          }
+          width="192"
+          height="192"
+          draggable={false}
+          className="h-full w-full object-contain"
         />
-        <span className="pointer-events-none absolute inset-0 rounded-[7px] ring-1 ring-inset ring-white/25" />
+        {item.id === 'terminal' && (
+          <span className="pointer-events-none absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#0a84ff] px-1 text-[9px] font-bold text-white shadow-md ring-2 ring-white/70">
+            AI
+          </span>
+        )}
       </span>
-      <span className="desk-label max-w-full truncate rounded-[5px] px-1.5 pb-[2px] text-[11.5px] font-medium leading-[1.35] text-white">
-        {project.title}
+      <span className="desk-label max-w-full truncate rounded-[5px] px-1.5 pb-[1px] text-[11.5px] font-medium leading-[1.3] text-white">
+        {item.label}
       </span>
+      {item.note && !compact && (
+        <span className="max-w-full truncate text-[9.5px] font-medium leading-none text-white/65">
+          {item.note}
+        </span>
+      )}
     </button>
   )
 }

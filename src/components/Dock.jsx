@@ -61,7 +61,7 @@ export default function Dock({
   const activate = item => {
     if (item.special === 'launchpad') return onLaunchpad()
     if (item.special === 'reset') return onReset()
-    onOpen(item.id)
+    onOpen(item.id, item)
   }
 
   return (
@@ -77,9 +77,9 @@ export default function Dock({
         className={`dock-bar flex items-end rounded-[22px] border border-white/30 bg-white/25 shadow-[0_16px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl dark:border-white/15 dark:bg-black/35 ${compact ? 'gap-1 px-2 py-1.5' : 'gap-2 px-2.5 pb-2 pt-1.5'}`}
       >
         {items.map((item, i) => {
-          const isRunning = item.special ? false : running.includes(item.id)
+          const isRunning = item.special ? false : running.includes(item.windowKey || item.id)
           return (
-            <div key={item.id} className={`relative flex flex-col items-center ${item.special === 'launchpad' ? 'ml-1 border-l border-white/25 pl-2 dark:border-white/15' : ''}`}>
+            <div key={item.id} className={`relative flex flex-col items-center ${!compact && (item.special === 'launchpad' || item.id === 'terminal') ? 'ml-1 border-l border-white/25 pl-2 dark:border-white/15' : ''}`}>
               <button
                 type="button"
                 ref={el => {
@@ -90,7 +90,7 @@ export default function Dock({
                 onBlur={() => setHovered(null)}
                 aria-label={item.label}
                 className="dock-item group relative block rounded-[22%] outline-none transition-transform duration-150 ease-out"
-                style={{ width: compact ? Math.max(38, size - 16) : size, height: compact ? Math.max(38, size - 16) : size }}
+                style={{ width: compact ? Math.max(34, size - 24) : size, height: compact ? Math.max(34, size - 24) : size }}
               >
                 <img
                   src={item.icon}
