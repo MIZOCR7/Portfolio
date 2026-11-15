@@ -39,5 +39,5 @@ There is no backend, database or environment variable. The résumé window is pr
 ## Deployment
 
 The live site is deployed on Vercel from `main` at
-[portfolio-ziad16.vercel.app](https://portfolio-ziad16.vercel.app). Pushing to `main` triggers a
+[portfolio-2kkf.vercel.app](https://portfolio-2kkf.vercel.app). Pushing to `main` triggers a
 production build (`npm run build`); no environment variables are required.
