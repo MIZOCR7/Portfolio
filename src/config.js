@@ -34,7 +34,7 @@ export const CONFIG = {
   defaultWallpaper: 'sonoma',
 
   desktop: {
-    hint: 'Double-click a folder to look inside. The AI Terminal answers anything about me — start with /help.',
+    hint: 'Double-click a folder to look inside. The AI Terminal answers anything about me — type /live to talk to it out loud.',
     resetNote: 'Desktop icons restored to their original places.',
   },
 
@@ -567,9 +567,9 @@ It is given this entire portfolio as context — the story, every project, every
   what did ziad teach?
   how do i contact him?
 
-Type /help for the shell commands. Type /live to start a proper conversation with the agent, where you can go back and forth instead of running one command at a time.
+Type /help for the shell commands. Type /live to start a real Gemini Live voice call: the agent listens through your microphone, answers out loud in a natural voice, and the terminal draws the live audio signal as a moving waveform. You can interrupt it just by speaking, or type instead.
 
-The agent runs on Gemini through a small server-side endpoint. The API key never reaches the browser.`,
+The call runs on Gemini 3.8 Live through a short-lived, one-use token minted by a server-side endpoint. The API key never reaches the browser. Use headphones for the cleanest conversation.`,
     },
   ],
 

@@ -495,13 +495,13 @@ export default function Desktop() {
                 className="h-10 w-10 flex-none object-contain drop-shadow"
               />
               <div className="min-w-0">
-                <p className="text-[12px] font-semibold">Ask my AI anything</p>
-                <p className="truncate text-[10.5px] text-white/60">Gemini · knows this portfolio</p>
+                <p className="text-[12px] font-semibold">Talk to my AI</p>
+                <p className="truncate text-[10.5px] text-white/60">Gemini Live voice · knows this portfolio</p>
               </div>
             </div>
             <p className="mt-2 text-[10.5px] leading-relaxed text-white/65">
               Projects, certificates, teaching, contact. Try{' '}
-              <span className="font-mono text-[#8ab4f8]">/help</span> or start a conversation with{' '}
+              <span className="font-mono text-[#8ab4f8]">/help</span> or talk to it with{' '}
               <span className="font-mono text-[#8fe0aa]">/live</span>.
             </p>
           </button>
@@ -539,9 +539,9 @@ export default function Desktop() {
             <img src="images/icons/terminal.png" alt="" className="h-9 w-9 object-contain" />
             <span className="min-w-0 flex-1">
               <span className="block text-[12px] font-semibold">Talk to Ziad AI</span>
-              <span className="block text-[10.5px] text-white/65">
-                Ask anything · /help · /live
-              </span>
+                              <span className="block text-[10.5px] text-white/65">
+                  Ask anything · /help · /live voice
+                </span>
             </span>
             <span className="text-[16px] text-white/60">›</span>
           </button>

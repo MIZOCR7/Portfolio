@@ -2,9 +2,11 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { askGemini, getAgentStatus } from './server/agent.js'
+import { createLiveToken, getLiveStatus } from './server/live.js'
 
-/* Local stand-in for the Vercel function so `npm run dev` can exercise the AI
-   terminal without deploying. The key stays in .env and never enters the bundle. */
+/* Local stand-ins for the Vercel functions so `npm run dev` can exercise the
+   AI terminal and the Gemini Live call without deploying. The key stays in
+   .env and never enters the bundle. */
 function agentApi() {
   return {
     name: 'ziad-agent-api',
@@ -49,6 +51,36 @@ function agentApi() {
           )
         }
       })
+
+      server.middlewares.use('/api/live', async (req: any, res: any) => {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8')
+        res.setHeader('Cache-Control', 'no-store, max-age=0')
+
+        if (req.method === 'GET') {
+          res.statusCode = 200
+          res.end(JSON.stringify(getLiveStatus()))
+          return
+        }
+        if (req.method !== 'POST') {
+          res.statusCode = 405
+          res.end(JSON.stringify({ error: 'method_not_allowed' }))
+          return
+        }
+
+        try {
+          const session = await createLiveToken()
+          res.statusCode = 200
+          res.end(JSON.stringify(session))
+        } catch (error: any) {
+          res.statusCode = error.status || 500
+          res.end(
+            JSON.stringify({
+              error: error.code || 'live_error',
+              message: error.message || 'The live voice session could not start.',
+            })
+          )
+        }
+      })
     },
   }
 }
@@ -57,6 +89,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   if (env.GEMINI_API_KEY) process.env.GEMINI_API_KEY = env.GEMINI_API_KEY
   if (env.GEMINI_MODEL) process.env.GEMINI_MODEL = env.GEMINI_MODEL
+  if (env.GEMINI_LIVE_MODEL) process.env.GEMINI_LIVE_MODEL = env.GEMINI_LIVE_MODEL
+  if (env.GEMINI_LIVE_VOICE) process.env.GEMINI_LIVE_VOICE = env.GEMINI_LIVE_VOICE
 
   return {
     base: './',

@@ -21,19 +21,29 @@ updates the desktop, folders, Spotlight, Launchpad, résumé and the agent toget
 ## The AI terminal
 
 The desktop terminal sends free-text questions to `/api/chat`, a server-side Vercel function that
-calls Gemini with the full portfolio as context. `/help` lists the shell commands; `/live` starts a
-back-and-forth conversation; `/clear` resets the screen.
+calls Gemini with the full portfolio as context. `/help` lists the shell commands; `/clear` resets
+the screen.
+
+`/live` starts a real **Gemini Live** voice call. The browser asks for the microphone, streams
+16 kHz PCM to Gemini, and plays the 24 kHz voice answer while the terminal draws the audio as a
+moving waveform. You can speak, interrupt, or type; `/exit` ends the call. The browser never sees
+the API key: `/api/live` mints a one-use ephemeral token that is already locked to the model, the
+`Charon` voice, audio output, and Ziad's full profile. The Live socket is opened directly from the
+browser to Google.
 
 The key must never be committed or shipped to the browser. Locally it goes in `.env` (gitignored):
 
 ```bash
 GEMINI_API_KEY=...
-GEMINI_MODEL=gemini-3.1-flash-lite   # optional
+GEMINI_MODEL=gemini-3.1-flash-lite       # optional, text terminal
+GEMINI_LIVE_MODEL=gemini-3.8-live        # optional, voice call
+GEMINI_LIVE_VOICE=Charon                 # optional
 ```
 
 Add the same `GEMINI_API_KEY` in **Vercel → Project → Settings → Environment Variables** for the
 live deployment, then redeploy. Without a key the terminal says so and answers from the local
-profile instead, so the site never breaks.
+profile instead, so the site never breaks. The microphone needs HTTPS (or localhost), so use the
+deployed URL or `npm run dev` when testing a call.
 
 ## Structure
 
@@ -45,13 +55,20 @@ src/components/          MenuBar, Dock, Spotlight, Launchpad, ControlCenter,
 src/apps/                Folder, Project, About, Certifications, Honors, Experience,
                          Skills, Notes, Photos, Social, Contact, Resume, Terminal,
                          Viewer, Shortcuts
-src/lib/                 local agent fallback and the API client
+src/lib/                 local agent fallback, text API client and Live audio client
 server/agent.js          Gemini prompt, model call and error handling
+server/live.js           Live system prompt, voice config and ephemeral token minting
 api/chat.js              Vercel function (GET status, POST question)
+api/live.js              Vercel function (GET status, POST one-use Live token)
 public/images/           macOS wallpapers, folder, Terminal and app icons
 public/icons/            GitHub, LinkedIn, Instagram and mail glyphs
+public/cursors/          macOS Tahoe arrow, hand and I-beam cursors (MIT)
 public/media/            project photos, certificate scans and the Pipe Inspector clip
 ```
+
+The site uses the macOS Tahoe cursor set from `dazham/MacOS-Cursors-on-Windows` (MIT) throughout the
+desktop, including a custom I-beam in text fields and a pointing hand on links. The licence is kept
+in `public/cursors/LICENSE.txt`.
 
 There is no database. The résumé window is printable HTML (“Print / Save PDF”); no PDF file is
 fabricated.

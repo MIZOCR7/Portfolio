@@ -298,6 +298,34 @@ button {
   }
 }
 
+/* macOS cursors (Tahoe set, MIT — see public/cursors/LICENSE.txt) */
+:root {
+  --cursor-arrow: url('/cursors/macos-arrow.png') 2 3, default;
+  --cursor-hand: url('/cursors/macos-hand.png') 10 3, pointer;
+  --cursor-text: url('/cursors/macos-i-beam.png') 30 30, text;
+}
+
+html,
+body,
+#root,
+button,
+[role='button'],
+summary,
+select {
+  cursor: var(--cursor-arrow);
+}
+
+a,
+[data-cursor='hand'] {
+  cursor: var(--cursor-hand);
+}
+
+input,
+textarea,
+[contenteditable='true'] {
+  cursor: var(--cursor-text);
+}
+
 /* desktop folder / terminal glyphs */
 .desk-glyph {
   filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.42));
