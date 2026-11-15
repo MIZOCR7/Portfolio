@@ -38,6 +38,9 @@ dist-ssr
 # Local tooling
 .freebuff/
 shots/
+.cache/
+*.zip
+preview-*.png
 
 # Keep the example env file
 !.env.example
