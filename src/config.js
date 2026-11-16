@@ -444,7 +444,7 @@ Everything is in two folders now. Projects holds the seven things I have built. 
 
 The third icon is an AI terminal. It knows this entire portfolio because it reads the same file that builds it. Type /help to see the commands, or /live to talk to it properly. You can ask it anything about me and it will answer in a shell.
 
-The Music icon in the Dock is a working player for Desk Sessions, three original instrumentals I made for late builds. The player is in the design because the work has a soundtrack.
+The Music icon in the Dock is a working player for Desk Sessions: three original instrumentals and a Cairo-pop placeholder, made for late builds. The player is in the design because the work has a soundtrack.
 
 The bin on the right puts the desktop back where it started.`,
     },
@@ -794,7 +794,7 @@ The call runs on Gemini 3.8 Live through a short-lived, one-use token minted by 
     artist: 'Ziad Emad',
     year: '2026',
     genre: 'Ambient',
-    description: 'Three original instrumentals for late builds, long reads and the walk back from a contest.',
+    description: 'Three original instrumentals and an Arabic-pop placeholder for late builds, long reads and the walk back from a contest.',
     tracks: [
       {
         id: 'night-shift',
@@ -829,10 +829,22 @@ The call runs on Gemini 3.8 Live through a short-lived, one-use token minted by 
         cover: 'media/music/cover-after-the-fair.jpg',
         accent: '#9db4ff',
       },
+      {
+        id: 'cairo-night',
+        title: 'Cairo Night',
+        artist: 'Ziad Emad',
+        album: 'Desk Sessions',
+        year: '2026',
+        duration: '0:48',
+        src: 'media/music/cairo-night.mp3',
+        cover: 'media/music/cover-cairo-night.jpg',
+        accent: '#ff8a5c',
+        placeholder: 'Amr Diab request — original stand-in',
+      },
     ],
     playlists: [
-      { id: 'desk-sessions', name: 'Desk Sessions', trackIds: ['night-shift', 'clean-build', 'after-the-fair'] },
-      { id: 'after-hours', name: 'After Hours', trackIds: ['night-shift', 'after-the-fair'] },
+      { id: 'desk-sessions', name: 'Desk Sessions', trackIds: ['night-shift', 'clean-build', 'after-the-fair', 'cairo-night'] },
+      { id: 'after-hours', name: 'After Hours', trackIds: ['night-shift', 'after-the-fair', 'cairo-night'] },
       { id: 'signal', name: 'Signal', trackIds: ['clean-build'] },
     ],
   },

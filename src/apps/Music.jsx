@@ -256,12 +256,12 @@ export default function Music() {
   const mainSubtitle = searchResults
     ? `${searchResults.length} ${searchResults.length === 1 ? 'result' : 'results'} for “${query.trim()}”`
     : view === 'songs'
-      ? `${TRACKS.length} songs · 2 minutes`
+      ? `${TRACKS.length} songs · ${Math.round((TRACKS.length * 48) / 60)} minutes`
       : view === 'albums'
-        ? 'Desk Sessions · three covers, one late-night record'
+        ? `Desk Sessions · ${TRACKS.length} covers, one late-night record`
         : view === 'playlist'
           ? `Playlist · ${viewTracks.length} songs · ${fmt(viewTracks.length * 48)}`
-          : 'Three original instrumentals, made on this desk.'
+          : 'Original instrumentals and a Cairo-pop placeholder, made on this desk.'
 
   const progress = duration ? (time / duration) * 100 : 0
 
@@ -375,7 +375,9 @@ export default function Music() {
               ) : null}
             </span>
             <span className="mt-2 block truncate text-[12px] font-medium">{item.title}</span>
-            <span className="block truncate text-[10.5px] text-[var(--dim)]">Ziad Emad · 2026</span>
+            <span className="block truncate text-[10.5px] text-[var(--dim)]">
+              {item.placeholder ? 'Ziad Emad · placeholder' : 'Ziad Emad · 2026'}
+            </span>
           </button>
         )
       })}
@@ -565,7 +567,9 @@ export default function Music() {
                       <p className="mt-1 hidden max-w-[48ch] text-[10.5px] leading-relaxed text-white/60 sm:block">
                         {CONFIG.music.description}
                       </p>
-                      <p className="mt-1.5 text-[9.5px] text-white/45">Ziad Emad · 3 songs · 2 minutes</p>
+                      <p className="mt-1.5 text-[9.5px] text-white/45">
+                        Ziad Emad · {TRACKS.length} songs · {Math.round((TRACKS.length * 48) / 60)} minutes
+                      </p>
                       <div className="mt-2.5 flex items-center gap-2">
                         <button
                           type="button"

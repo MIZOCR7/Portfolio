@@ -59,7 +59,7 @@ deployed URL or `npm run dev` when testing a call.
 src/config.js            all site content, folders, certificates, honors, agent profile
 src/desktop/Desktop.jsx  desktop state, folders, windows, icons, keyboard shortcuts
 src/components/          MenuBar, Dock, Spotlight, Launchpad, ControlCenter,
-                         Window, DesktopIcon, ClockWidget, Media
+                         Window, DesktopIcon, ContextMenu, ClockWidget, Media
 src/apps/                Folder, Project, About, Certifications, Honors, Experience,
                          Skills, Notes, Photos, Music, Social, Contact, Resume,
                          Terminal, Viewer, Shortcuts
@@ -72,7 +72,7 @@ public/images/           macOS wallpapers, folder, Terminal and app icons
 public/icons/            GitHub, LinkedIn, Instagram and mail glyphs
 public/cursors/          macOS Tahoe arrow, hand and I-beam cursors (MIT)
 public/media/            project photos, certificate scans, the Pipe Inspector clip
-public/media/music/      original Desk Sessions instrumentals and cover art
+public/media/music/      Desk Sessions instrumentals, Cairo-pop placeholder and cover art
 ```
 
 The site uses the macOS Tahoe cursor set from `dazham/MacOS-Cursors-on-Windows` (MIT) throughout the
@@ -85,6 +85,6 @@ fabricated.
 ## Deployment
 
 The live site is deployed on Vercel from `main` at
-[portfolio-2kkf.vercel.app](https://portfolio-2kkf.vercel.app). Pushing to `main` triggers a
-production build. Set `GEMINI_API_KEY` in Vercel for the AI terminal; no other environment
-variables are required.
+[ziademad-ai-eng.dino.icu](https://ziademad-ai-eng.dino.icu); the old `portfolio-2kkf.vercel.app`
+URL redirects there. Pushing to `main` triggers a production build. Set `GEMINI_API_KEY` in Vercel
+for the AI terminal; no other environment variables are required.

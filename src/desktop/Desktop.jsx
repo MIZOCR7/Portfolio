@@ -9,6 +9,7 @@ import Window from '../components/Window'
 import Launchpad from '../components/Launchpad'
 import Spotlight from '../components/Spotlight'
 import ControlCenter from '../components/ControlCenter'
+import ContextMenu from '../components/ContextMenu'
 import Folder from '../apps/Folder'
 import Project from '../apps/Project'
 import About from '../apps/About'
@@ -48,6 +49,7 @@ export default function Desktop() {
   const [launchpad, setLaunchpad] = useState(false)
   const [spotlight, setSpotlight] = useState(false)
   const [control, setControl] = useState(false)
+  const [context, setContext] = useState(null)
   const [toast, setToast] = useState('')
   const [area, setArea] = useState({ w: 1200, h: 700 })
 
@@ -56,6 +58,12 @@ export default function Desktop() {
   const openers = useRef(new Map())
   const wallpaperRef = useRef(null)
   const areaRef = useRef(null)
+  const windowsRef = useRef([])
+  const skipPop = useRef(false)
+
+  useEffect(() => {
+    windowsRef.current = windows
+  }, [windows])
 
   const clock = useClock(CONFIG.site.timezone)
   const wallpaper = CONFIG.wallpapers.find(w => w.id === wallpaperId) || CONFIG.wallpapers[0]
@@ -135,6 +143,16 @@ export default function Desktop() {
     (app, data) => {
       const conf = appWindows[app]
       if (!conf) return
+      // One browser-history entry represents "inside the desktop". Opening the
+      // first window adds it; mobile/browser Back then closes a window instead
+      // of navigating away from the portfolio.
+      if (windowsRef.current.length === 0 && window.history.state?.ziadApp !== true) {
+        try {
+          window.history.pushState({ ziadApp: true }, '', window.location.href)
+        } catch {
+          /* history is unavailable in some embedded browsers */
+        }
+      }
       const key =
         app === 'folder'
           ? `folder:${data}`
@@ -196,23 +214,58 @@ export default function Desktop() {
     [open]
   )
 
-  const close = useCallback(key => {
-    setWindows(prev => {
-      const next = prev.filter(w => w.key !== key)
-      const opener = openers.current.get(key)
-      openers.current.delete(key)
-      window.requestAnimationFrame(() => {
-        if (opener && document.contains(opener) && !opener.disabled)
-          opener.focus?.({ preventScroll: true })
-        else {
-          const top = [...next].filter(w => !w.minimized).sort((a, b) => b.z - a.z)[0]
-          if (top) document.querySelector(`[data-window="${CSS.escape(top.key)}"]`)?.focus?.()
-          else document.querySelector('[aria-label="Dock"] button')?.focus?.()
-        }
-      })
-      return next
+  const close = useCallback((key, fromHistory = false) => {
+    const next = windowsRef.current.filter(w => w.key !== key)
+    windowsRef.current = next
+    setWindows(next)
+    const opener = openers.current.get(key)
+    openers.current.delete(key)
+    window.requestAnimationFrame(() => {
+      if (opener && document.contains(opener) && !opener.disabled)
+        opener.focus?.({ preventScroll: true })
+      else {
+        const top = [...next].filter(w => !w.minimized).sort((a, b) => b.z - a.z)[0]
+        if (top) document.querySelector(`[data-window="${CSS.escape(top.key)}"]`)?.focus?.()
+        else document.querySelector('[aria-label="Dock"] button')?.focus?.()
+      }
     })
+    if (!fromHistory && next.length === 0 && window.history.state?.ziadApp === true) {
+      // Closing the last window from the UI should also leave the synthetic
+      // "inside the desktop" entry, otherwise Back would close a phantom window.
+      skipPop.current = true
+      window.history.back()
+    }
   }, [])
+
+  useEffect(() => {
+    try {
+      if (!window.history.state?.ziadDesktop && !window.history.state?.ziadApp)
+        window.history.replaceState({ ziadDesktop: true }, '', window.location.href)
+    } catch {
+      /* history is unavailable */
+    }
+
+    const onPop = () => {
+      if (skipPop.current) {
+        skipPop.current = false
+        return
+      }
+      const current = windowsRef.current
+      if (!current.length) return
+      const top = [...current].sort((a, b) => b.z - a.z)[0]
+      close(top.key, true)
+      try {
+        if (windowsRef.current.length)
+          window.history.pushState({ ziadApp: true }, '', window.location.href)
+        else window.history.replaceState({ ziadDesktop: true }, '', window.location.href)
+      } catch {
+        /* history is unavailable */
+      }
+    }
+
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [close])
 
   const minimize = useCallback(key => {
     setWindows(prev => {
@@ -276,6 +329,29 @@ export default function Desktop() {
     notify(`Wallpaper: ${next.label}`)
   }, [wallpaper.id, setWallpaperId, notify])
 
+  const openContextMenu = useCallback((e, itemId = null) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setSelected(itemId)
+    setContext({ x: e.clientX, y: e.clientY, itemId })
+  }, [])
+
+  const onDeskContextMenu = useCallback(
+    e => {
+      const icon = e.target.closest?.('[data-desk-id]')
+      openContextMenu(e, icon?.getAttribute('data-desk-id') || null)
+    },
+    [openContextMenu]
+  )
+
+  const resetIcon = useCallback(id => {
+    setLayout(prev => {
+      const next = { ...prev }
+      delete next[id]
+      return next
+    })
+  }, [setLayout])
+
   const running = useMemo(() => windows.map(w => w.key), [windows])
 
   useEffect(() => {
@@ -322,6 +398,7 @@ export default function Desktop() {
         return
       }
       if (e.key === 'Escape') {
+        if (context) return setContext(null)
         if (launchpad) return setLaunchpad(false)
         if (spotlight) return setSpotlight(false)
         if (control) return setControl(false)
@@ -330,7 +407,7 @@ export default function Desktop() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [topWindow, launchpad, spotlight, control, close, minimize, open])
+  }, [topWindow, launchpad, spotlight, control, context, close, minimize, open])
 
   const positions = useMemo(() => {
     const out = {}
@@ -467,6 +544,7 @@ export default function Desktop() {
           onClick={e => {
             if (e.target === e.currentTarget) setSelected(null)
           }}
+          onContextMenu={onDeskContextMenu}
         >
           {CONFIG.desktopItems.map(item => (
             <DesktopIcon
@@ -512,6 +590,7 @@ export default function Desktop() {
         <div
           className="absolute inset-x-0 bottom-[calc(92px+env(safe-area-inset-bottom,0px))] top-[calc(118px+env(safe-area-inset-top,0px))] z-[6] overflow-y-auto px-3 pb-6"
           aria-label="Projects and about"
+          onContextMenu={onDeskContextMenu}
         >
           <p className="mb-3 px-1 text-[11px] text-white/65">
             Two folders, one AI terminal, and a music player. Tap to open.
@@ -600,6 +679,50 @@ export default function Desktop() {
         setDockSize={setDockSize}
         onReset={resetLayout}
       />
+
+      {context ? (
+        <ContextMenu
+          x={context.x}
+          y={context.y}
+          label={context.itemId ? 'Desktop item menu' : 'Desktop menu'}
+          onClose={() => setContext(null)}
+          items={
+            context.itemId
+              ? [
+                  {
+                    label: `Open ${CONFIG.desktopItems.find(i => i.id === context.itemId)?.label || 'Item'}`,
+                    action: () => openItem(context.itemId),
+                  },
+                  {
+                    label: 'Reset Icon Position',
+                    action: () => resetIcon(context.itemId),
+                  },
+                  { sep: true },
+                  { label: 'Change Wallpaper', action: nextWallpaper },
+                  {
+                    label: theme === 'dark' ? 'Use Light Appearance' : 'Use Dark Appearance',
+                    action: () => setTheme(theme === 'dark' ? 'light' : 'dark'),
+                  },
+                  { sep: true },
+                  { label: 'Reset Desktop', action: resetLayout },
+                ]
+              : [
+                  { label: 'Open Projects', action: () => open('folder', 'projects') },
+                  { label: 'Open About Me', action: () => open('folder', 'about-me') },
+                  { label: 'Open Music', action: () => open('music') },
+                  { label: 'Open AI Terminal', action: () => open('terminal') },
+                  { sep: true },
+                  { label: 'Change Wallpaper', action: nextWallpaper },
+                  {
+                    label: theme === 'dark' ? 'Use Light Appearance' : 'Use Dark Appearance',
+                    action: () => setTheme(theme === 'dark' ? 'light' : 'dark'),
+                  },
+                  { sep: true },
+                  { label: 'Reset Desktop', action: resetLayout },
+                ]
+          }
+        />
+      ) : null}
 
       <div
         aria-live="polite"
