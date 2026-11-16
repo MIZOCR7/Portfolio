@@ -90,7 +90,7 @@ export default function Dock({
                 onBlur={() => setHovered(null)}
                 aria-label={item.label}
                 className="dock-item group relative block rounded-[22%] outline-none transition-transform duration-150 ease-out"
-                style={{ width: compact ? Math.max(34, size - 24) : size, height: compact ? Math.max(34, size - 24) : size }}
+                style={{ width: compact ? Math.max(30, size - 28) : size, height: compact ? Math.max(30, size - 28) : size }}
               >
                 <img
                   src={item.icon}

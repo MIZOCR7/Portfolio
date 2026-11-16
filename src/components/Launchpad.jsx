@@ -10,6 +10,7 @@ const APPS = [
   { id: 'skills', label: 'Skills', icon: 'images/icons/terminal.png' },
   { id: 'notes', label: 'Notes', icon: 'images/icons/notes.png' },
   { id: 'photos', label: 'Photos', icon: 'images/icons/photos.png' },
+  { id: 'music', label: 'Music', icon: 'images/icons/music.png' },
   { id: 'social', label: 'Social', icon: 'images/icons/safari.png' },
   { id: 'contact', label: 'Email', icon: 'images/icons/mail.png' },
   { id: 'resume', label: 'Résumé', icon: 'images/icons/preview.png' },

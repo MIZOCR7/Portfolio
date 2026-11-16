@@ -14,9 +14,17 @@ npm run preview    # serve the production build locally
 
 ## Editing content
 
-All copy, projects, certifications, honors, experience, photos, links and the terminal's knowledge
-live in **`src/config.js`**. Components read from that object, so editing a project or certificate
-updates the desktop, folders, Spotlight, Launchpad, résumé and the agent together.
+All copy, projects, certifications, honors, experience, photos, links, the music library and the
+terminal's knowledge live in **`src/config.js`**. Components read from that object, so editing a
+project, certificate or track updates the desktop, folders, Spotlight, Launchpad, résumé and the
+agent together.
+
+## Music
+
+The **Music** icon in the Dock opens a macOS Music-style window: Listen Now, Songs, Albums, playlists,
+search, favourites, a working transport with seek/volume/shuffle/repeat, and an Up Next queue. The
+three tracks are original instrumentals made for this desktop, stored in `public/media/music/` with
+their cover art, so the player needs no external audio service and no third-party licence.
 
 ## The AI terminal
 
@@ -53,8 +61,8 @@ src/desktop/Desktop.jsx  desktop state, folders, windows, icons, keyboard shortc
 src/components/          MenuBar, Dock, Spotlight, Launchpad, ControlCenter,
                          Window, DesktopIcon, ClockWidget, Media
 src/apps/                Folder, Project, About, Certifications, Honors, Experience,
-                         Skills, Notes, Photos, Social, Contact, Resume, Terminal,
-                         Viewer, Shortcuts
+                         Skills, Notes, Photos, Music, Social, Contact, Resume,
+                         Terminal, Viewer, Shortcuts
 src/lib/                 local agent fallback, text API client and Live audio client
 server/agent.js          Gemini prompt, model call and error handling
 server/live.js           Live system prompt, voice config and ephemeral token minting
@@ -63,7 +71,8 @@ api/live.js              Vercel function (GET status, POST one-use Live token)
 public/images/           macOS wallpapers, folder, Terminal and app icons
 public/icons/            GitHub, LinkedIn, Instagram and mail glyphs
 public/cursors/          macOS Tahoe arrow, hand and I-beam cursors (MIT)
-public/media/            project photos, certificate scans and the Pipe Inspector clip
+public/media/            project photos, certificate scans, the Pipe Inspector clip
+public/media/music/      original Desk Sessions instrumentals and cover art
 ```
 
 The site uses the macOS Tahoe cursor set from `dazham/MacOS-Cursors-on-Windows` (MIT) throughout the

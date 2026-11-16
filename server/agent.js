@@ -4,7 +4,7 @@ export const DEFAULT_MODEL = 'gemini-3.1-flash-lite'
 export const MODEL = process.env.GEMINI_MODEL || DEFAULT_MODEL
 
 function profile() {
-  const { site, about, projects, certificates, honors, experience, education, tech, socials } = CONFIG
+  const { site, about, projects, certificates, honors, experience, education, tech, socials, music } = CONFIG
   return JSON.stringify(
     {
       person: site,
@@ -26,6 +26,15 @@ function profile() {
       honors,
       skills: tech,
       socials,
+      music: {
+        title: music.title,
+        artist: music.artist,
+        year: music.year,
+        genre: music.genre,
+        description: music.description,
+        tracks: music.tracks.map(t => ({ title: t.title, album: t.album, year: t.year, duration: t.duration })),
+        playlists: music.playlists.map(p => ({ name: p.name, tracks: p.trackIds.length })),
+      },
     },
     null,
     1

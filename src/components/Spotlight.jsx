@@ -11,6 +11,7 @@ const APP_ITEMS = [
   { id: 'skills', label: 'Skills', kind: 'Document', keywords: 'stack tools python pytorch yolo react languages', icon: 'images/icons/terminal.png' },
   { id: 'notes', label: 'Notes', kind: 'Application', keywords: 'writing now toolkit story process', icon: 'images/icons/notes.png' },
   { id: 'photos', label: 'Photos', kind: 'Application', keywords: 'photos gallery pictures portrait', icon: 'images/icons/photos.png' },
+  { id: 'music', label: 'Music', kind: 'Application', keywords: 'music player songs listen audio desk sessions night shift clean build after the fair', icon: 'images/icons/music.png' },
   { id: 'social', label: 'Social', kind: 'Application', keywords: 'links github linkedin instagram contact', icon: 'images/icons/safari.png' },
   { id: 'contact', label: 'Mail', kind: 'Application', keywords: 'email contact hire', icon: 'images/icons/mail.png' },
   { id: 'resume', label: 'Résumé', kind: 'Application', keywords: 'cv curriculum vitae resume print', icon: 'images/icons/preview.png' },

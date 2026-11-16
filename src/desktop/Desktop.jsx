@@ -18,6 +18,7 @@ import Experience from '../apps/Experience'
 import Skills from '../apps/Skills'
 import Notes from '../apps/Notes'
 import Photos from '../apps/Photos'
+import Music from '../apps/Music'
 import Social from '../apps/Social'
 import Contact from '../apps/Contact'
 import Resume from '../apps/Resume'
@@ -370,6 +371,7 @@ export default function Desktop() {
     if (win.app === 'skills') return <Skills onOpenApp={app => open(app)} />
     if (win.app === 'notes') return <Notes />
     if (win.app === 'photos') return <Photos onView={item => open('viewer', item)} />
+    if (win.app === 'music') return <Music />
     if (win.app === 'social') return <Social onLink={openLink} />
     if (win.app === 'contact') return <Contact onCopy={notify} />
     if (win.app === 'resume') return <Resume />
@@ -512,7 +514,7 @@ export default function Desktop() {
           aria-label="Projects and about"
         >
           <p className="mb-3 px-1 text-[11px] text-white/65">
-            Two folders, one AI terminal. Tap to open.
+            Two folders, one AI terminal, and a music player. Tap to open.
           </p>
           <div className="grid grid-cols-2 gap-x-2 gap-y-4">
             {CONFIG.desktopItems.map(item => (
