@@ -34,15 +34,19 @@ export const CONFIG = {
   defaultWallpaper: 'sonoma',
 
   desktop: {
-    hint: 'Double-click a folder to look inside. The AI Terminal answers anything about me — type /live to talk to it out loud. Music is in the Dock.',
-    resetNote: 'Desktop icons restored to their original places.',
+    hint: 'Six folders are spread across the desk, with the AI Terminal in the middle. Double-click a folder to look inside, or right-click the desktop for more. Music is in Studio and the Dock.',
+    resetNote: 'Desktop folders restored to their original places.',
   },
 
-  /* The three things that live on the desktop: two folders and the agent. */
+  /* Six folders and the agent — deliberately under the seven-folder limit. */
   iconSeeds: {
-    projects: { x: 0.02, y: 0.06 },
-    'about-me': { x: 0.02, y: 0.36 },
-    terminal: { x: 0.83, y: 0.06 },
+    projects: { x: 0.02, y: 0.05 },
+    'about-me': { x: 0.02, y: 0.42 },
+    achievements: { x: 0.26, y: 0.05 },
+    experience: { x: 0.26, y: 0.42 },
+    contact: { x: 0.74, y: 0.05 },
+    studio: { x: 0.74, y: 0.42 },
+    terminal: { x: 0.5, y: 0.28 },
   },
 
   desktopItems: [
@@ -60,7 +64,39 @@ export const CONFIG = {
       folder: 'about-me',
       label: 'About Me',
       icon: 'images/icons/folder.png',
-      note: 'CV · certificates',
+      note: 'Story · résumé',
+    },
+    {
+      id: 'achievements',
+      type: 'folder',
+      folder: 'achievements',
+      label: 'Achievements',
+      icon: 'images/icons/folder.png',
+      note: 'Certs · honors',
+    },
+    {
+      id: 'experience',
+      type: 'folder',
+      folder: 'experience',
+      label: 'Experience',
+      icon: 'images/icons/folder.png',
+      note: 'Roles · skills',
+    },
+    {
+      id: 'contact',
+      type: 'folder',
+      folder: 'contact',
+      label: 'Contact',
+      icon: 'images/icons/folder.png',
+      note: 'Email · socials',
+    },
+    {
+      id: 'studio',
+      type: 'folder',
+      folder: 'studio',
+      label: 'Studio',
+      icon: 'images/icons/folder.png',
+      note: 'Music · notes',
     },
     {
       id: 'terminal',
@@ -87,7 +123,7 @@ export const CONFIG = {
     },
     'about-me': {
       title: 'About Me',
-      subtitle: 'The full picture: who I am, what I have earned, what I have taught, and how to reach me.',
+      subtitle: 'The long version, the printable CV, and a few frames from the workshop.',
       items: [
         {
           kind: 'app',
@@ -95,41 +131,6 @@ export const CONFIG = {
           label: 'About Me.txt',
           icon: 'images/icons/textedit.png',
           meta: 'The long version',
-        },
-        {
-          kind: 'app',
-          id: 'certifications',
-          label: 'Certifications',
-          icon: 'images/icons/preview.png',
-          meta: '13 documents',
-        },
-        {
-          kind: 'app',
-          id: 'honors',
-          label: 'Honors',
-          icon: 'images/icons/apps.png',
-          meta: 'Awards & recognition',
-        },
-        {
-          kind: 'app',
-          id: 'experience',
-          label: 'Experience',
-          icon: 'images/icons/notes.png',
-          meta: 'Roles · teaching · service',
-        },
-        {
-          kind: 'app',
-          id: 'skills',
-          label: 'Skills',
-          icon: 'images/icons/terminal.png',
-          meta: 'Toolkit',
-        },
-        {
-          kind: 'app',
-          id: 'notes',
-          label: 'Notes',
-          icon: 'images/icons/notes.png',
-          meta: 'Writing about the work',
         },
         {
           kind: 'app',
@@ -153,13 +154,52 @@ export const CONFIG = {
           icon: 'images/icons/preview.png',
           meta: 'One page · printable',
         },
+      ],
+    },
+    achievements: {
+      title: 'Achievements',
+      subtitle: 'The evidence behind the claims: certificates, finalist places and recognition.',
+      items: [
         {
           kind: 'app',
-          id: 'social',
-          label: 'Social',
-          icon: 'images/icons/safari.png',
-          meta: 'GitHub · LinkedIn · Instagram',
+          id: 'certifications',
+          label: 'Certifications',
+          icon: 'images/icons/preview.png',
+          meta: '13 documents',
         },
+        {
+          kind: 'app',
+          id: 'honors',
+          label: 'Honors',
+          icon: 'images/icons/apps.png',
+          meta: 'Awards & recognition',
+        },
+      ],
+    },
+    experience: {
+      title: 'Experience',
+      subtitle: 'Roles, teaching, service and the toolkit I use to build the work.',
+      items: [
+        {
+          kind: 'app',
+          id: 'experience',
+          label: 'Experience',
+          icon: 'images/icons/notes.png',
+          meta: 'Roles · teaching · service',
+        },
+        {
+          kind: 'app',
+          id: 'skills',
+          label: 'Skills',
+          icon: 'images/icons/terminal.png',
+          meta: 'Toolkit',
+        },
+      ],
+    },
+    contact: {
+      title: 'Contact',
+      subtitle: 'The fastest ways to reach me, and the places where the work lives online.',
+      items: [
         {
           kind: 'app',
           id: 'contact',
@@ -168,12 +208,39 @@ export const CONFIG = {
           meta: 'Email Ziad',
         },
         {
+          kind: 'app',
+          id: 'social',
+          label: 'Social',
+          icon: 'images/icons/safari.png',
+          meta: 'GitHub · LinkedIn · Instagram',
+        },
+        {
           kind: 'link',
           id: 'instagram',
           label: 'Instagram',
           icon: 'icons/instagram.svg',
           meta: '@zes79586',
           href: 'https://www.instagram.com/zes79586/',
+        },
+      ],
+    },
+    studio: {
+      title: 'Studio',
+      subtitle: 'The soundtrack for late builds, and the notes that go with the work.',
+      items: [
+        {
+          kind: 'app',
+          id: 'music',
+          label: 'Music',
+          icon: 'images/icons/music.png',
+          meta: 'Desk Sessions · 4 tracks',
+        },
+        {
+          kind: 'app',
+          id: 'notes',
+          label: 'Notes',
+          icon: 'images/icons/notes.png',
+          meta: 'Writing about the work',
         },
       ],
     },
@@ -437,14 +504,14 @@ export const CONFIG = {
     {
       id: 'hello',
       title: 'Hello',
-      preview: 'Two folders, one terminal.',
+      preview: 'Six folders, one terminal.',
       body: `Welcome to my desktop.
 
-Everything is in two folders now. Projects holds the seven things I have built. About Me holds the long version of me: my story, certifications, honors, experience, skills, photos, notes and contact details.
+The work is spread across six folders. Projects holds the seven things I have built. About Me holds the long version, photos and my printable CV. Achievements keeps the certificates and honors. Experience covers roles, teaching, service and skills. Contact is the fastest way to reach me. Studio holds the music and notes.
 
-The third icon is an AI terminal. It knows this entire portfolio because it reads the same file that builds it. Type /help to see the commands, or /live to talk to it properly. You can ask it anything about me and it will answer in a shell.
+The AI Terminal sits in the middle. It knows this entire portfolio because it reads the same file that builds it. Type /help to see the commands, or /live to talk to it properly. You can ask it anything about me and it will answer in a shell.
 
-The Music icon in the Dock is a working player for Desk Sessions: three original instrumentals and a Cairo-pop placeholder, made for late builds. The player is in the design because the work has a soundtrack.
+Music is also in the Dock: Desk Sessions, three original instrumentals and a Cairo-pop placeholder, made for late builds. The player is in the design because the work has a soundtrack.
 
 The bin on the right puts the desktop back where it started.`,
     },
@@ -524,7 +591,7 @@ Arabic (native) · English (fluent)`,
       id: 'recognition',
       title: 'Recognition',
       preview: 'Certificates and honors, in one place.',
-      body: `The About Me folder now holds everything as documents, not a list on a page.
+      body: `The Achievements folder holds the certificates and honors as documents, not a list on a page.
 
 CERTIFICATIONS
 ISEF-affiliated Egypt Science & Engineering Fair · ICPC Egyptian Teens (31st) · NASA Space Apps “Galactic Problem Solver” · IBM Machine Learning · The Earth Prize · Physics Brawl Online · Hack Club Axiom · Computer Network Fundamentals (ITI/Mahara-Tech) · October Geology Club · STEM Model Arab League · Egyptian Culture Palace teaching · Be My Eyes · Schoolhouse.

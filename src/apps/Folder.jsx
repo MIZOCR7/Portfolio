@@ -4,10 +4,10 @@ import { CONFIG } from '../config'
 const SIDEBAR = [
   { id: 'folder:projects', label: 'Projects', icon: 'images/icons/folder.png' },
   { id: 'folder:about-me', label: 'About Me', icon: 'images/icons/folder.png' },
-  { id: 'certifications', label: 'Certifications', icon: 'images/icons/preview.png' },
-  { id: 'honors', label: 'Honors', icon: 'images/icons/apps.png' },
-  { id: 'notes', label: 'Notes', icon: 'images/icons/notes.png' },
-  { id: 'photos', label: 'Photos', icon: 'images/icons/photos.png' },
+  { id: 'folder:achievements', label: 'Achievements', icon: 'images/icons/folder.png' },
+  { id: 'folder:experience', label: 'Experience', icon: 'images/icons/folder.png' },
+  { id: 'folder:contact', label: 'Contact', icon: 'images/icons/folder.png' },
+  { id: 'folder:studio', label: 'Studio', icon: 'images/icons/folder.png' },
   { id: 'terminal', label: 'AI Terminal', icon: 'images/icons/terminal.png' },
 ]
 
@@ -103,9 +103,7 @@ export default function Folder({
             </p>
             <ul className="space-y-[2px] text-[12.5px]">
               {SIDEBAR.map(item => {
-                const active =
-                  item.id === `folder:${folderId}` ||
-                  (folderId === 'about-me' && item.id === `folder:about-me`)
+                const active = item.id === `folder:${folderId}`
                 return (
                   <li key={item.id}>
                     <button

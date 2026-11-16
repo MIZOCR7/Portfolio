@@ -2,7 +2,7 @@ const GROUPS = [
   {
     title: 'Desktop',
     items: [
-      ['Double-click a folder', 'Open Projects or About Me'],
+      ['Double-click a folder', 'Open any of the six desktop folders'],
       ['Enter / Space', 'Open the selected item'],
       ['Arrow keys', 'Nudge the selected item'],
       ['Drag an item', 'Move it and remember the spot'],

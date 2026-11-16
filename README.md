@@ -1,7 +1,8 @@
 # Ziad Emad — desktop portfolio
 
-An interactive macOS-style desktop: two folders (Projects and About Me) and an AI terminal that
-answers questions about Ziad from the same content file that builds the site.
+An interactive macOS-style desktop: six folders — Projects, About Me, Achievements, Experience,
+Contact and Studio — plus an AI terminal that answers questions about Ziad from the same content
+file that builds the site.
 
 Built with React 19, Vite 8, Tailwind CSS 4 and a small Vercel function for Gemini.
 

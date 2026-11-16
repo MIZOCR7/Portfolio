@@ -43,7 +43,7 @@ const HELP = [
   out('  whoami             the short version of Ziad'),
   out('  projects           list every project'),
   out('  open <project>     open a project window (e.g. open pipe)'),
-  out('  folders            show the two desktop folders'),
+  out('  folders            show the six desktop folders'),
   out('  certs              list certifications'),
   out('  honors             list awards and recognition'),
   out('  experience         roles, teaching and service'),
@@ -404,8 +404,9 @@ export default function Terminal({ onOpenProject, onOpenApp, onOpenFolder, onLin
     if (command === 'folders' || command === 'ls') {
       push(
         out('Desktop folders:'),
-        out('  Projects      seven builds, including Pipe Inspector and Pest Sentinel'),
-        out('  About Me      story, certifications, honors, experience, skills, photos, résumé, contact'),
+        ...Object.entries(CONFIG.folders).map(([, folder]) =>
+          out(`  ${folder.title.padEnd(14)} ${folder.items.length} items`)
+        ),
         out(''),
         out('Open them from the desktop, the dock, or Spotlight.'),
         out('')
@@ -420,12 +421,25 @@ export default function Terminal({ onOpenProject, onOpenApp, onOpenFolder, onLin
         onOpenProject(project.id)
         return
       }
-      if (arg === 'projects' || arg === 'about' || arg === 'about-me') {
-        push(out(`Opening ${arg === 'projects' ? 'Projects' : 'About Me'}…`), out(''))
-        onOpenFolder(arg === 'projects' ? 'projects' : 'about-me')
+      const folderId = Object.keys(CONFIG.folders).find(
+        id =>
+          id === arg ||
+          CONFIG.folders[id].title.toLowerCase() === arg ||
+          (id === 'about-me' && arg === 'about')
+      )
+      if (folderId) {
+        push(out(`Opening ${CONFIG.folders[folderId].title}…`), out(''))
+        onOpenFolder(folderId)
         return
       }
-      push(out(arg ? `No project or folder named “${arg}”. Try “projects”.` : 'Usage: open <project-id>'), out(''))
+      push(
+        out(
+          arg
+            ? `No project or folder named “${arg}”. Try “projects”, “achievements” or “studio”.`
+            : 'Usage: open <project-id or folder>'
+        ),
+        out('')
+      )
       return
     }
 
@@ -434,7 +448,7 @@ export default function Terminal({ onOpenProject, onOpenApp, onOpenFolder, onLin
         out(`${CONFIG.certificates.length} certifications and awards on file:`),
         ...CONFIG.certificates.map(c => out(`  • ${c.title} — ${c.org}, ${c.year}`)),
         out(''),
-        out('Open About Me → Certifications to see the scans.'),
+        out('Open Achievements → Certifications to see the scans.'),
         out('')
       )
       return
@@ -454,7 +468,7 @@ export default function Terminal({ onOpenProject, onOpenApp, onOpenFolder, onLin
         out('Experience, teaching and service:'),
         ...CONFIG.experience.map(x => out(`  • ${x.role} — ${x.org}, ${x.period}`)),
         out(''),
-        out('Open About Me → Experience for the full descriptions.'),
+        out('Open Experience for the full descriptions.'),
         out('')
       )
       return

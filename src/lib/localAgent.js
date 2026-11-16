@@ -15,7 +15,7 @@ export function answerLocally(question) {
       'Ziad has 13 documents on file:',
       ...CONFIG.certificates.map(c => `• ${c.title} — ${c.org}, ${c.year}`),
       '',
-      'Open About Me → Certifications to see the scans.',
+      'Open Achievements → Certifications to see the scans.',
     ].join('\n')
   }
   if (has('honor', 'honour', 'recognition', 'win', 'won', 'place')) {

@@ -105,6 +105,10 @@ export default function MenuBar({
     File: [
       { label: 'Open Projects', kbd: '⌘1', action: () => onOpen('folder', 'projects') },
       { label: 'Open About Me', action: () => onOpen('folder', 'about-me') },
+      { label: 'Open Achievements', action: () => onOpen('folder', 'achievements') },
+      { label: 'Open Experience', action: () => onOpen('folder', 'experience') },
+      { label: 'Open Contact', action: () => onOpen('folder', 'contact') },
+      { label: 'Open Studio', action: () => onOpen('folder', 'studio') },
       { label: 'Open AI Terminal', kbd: '⌘T', action: () => onOpen('terminal') },
       { label: 'Open Music', action: () => onOpen('music') },
       { label: 'Contact Ziad', kbd: '⌘2', action: () => onOpen('contact') },

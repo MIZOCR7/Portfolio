@@ -48,7 +48,7 @@ export default function Social({ onLink }) {
 
           <div className="rounded-[11px] border border-dashed border-[var(--line)] p-4 text-[11.5px] leading-relaxed text-[var(--dim)]">
             <p className="mb-1 font-semibold text-[var(--fg)]">Also on file</p>
-            NASA Space Apps · The Earth Prize · IBM Machine Learning · Schoolhouse peer tutoring · Be My Eyes. Every certificate now lives in About Me → Certifications.
+            NASA Space Apps · The Earth Prize · IBM Machine Learning · Schoolhouse peer tutoring · Be My Eyes. Every certificate now lives in Achievements → Certifications.
           </div>
         </div>
 

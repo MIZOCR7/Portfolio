@@ -3,7 +3,11 @@ import { CONFIG } from '../config'
 
 const APP_ITEMS = [
   { id: 'folder:projects', label: 'Projects', kind: 'Folder', keywords: 'work builds finder portfolio pipe pest sprout', icon: 'images/icons/folder.png' },
-  { id: 'folder:about-me', label: 'About Me', kind: 'Folder', keywords: 'biography cv certifications honors experience photos', icon: 'images/icons/folder.png' },
+  { id: 'folder:about-me', label: 'About Me', kind: 'Folder', keywords: 'biography story cv résumé resume photos portrait', icon: 'images/icons/folder.png' },
+  { id: 'folder:achievements', label: 'Achievements', kind: 'Folder', keywords: 'certifications honors awards certificates isef icpc nasa', icon: 'images/icons/folder.png' },
+  { id: 'folder:experience', label: 'Experience', kind: 'Folder', keywords: 'roles teaching service skills toolkit schoolhouse culture palace', icon: 'images/icons/folder.png' },
+  { id: 'folder:contact', label: 'Contact', kind: 'Folder', keywords: 'email social github linkedin instagram hire reach', icon: 'images/icons/folder.png' },
+  { id: 'folder:studio', label: 'Studio', kind: 'Folder', keywords: 'music player notes writing desk sessions', icon: 'images/icons/folder.png' },
   { id: 'about', label: 'About Me.txt', kind: 'Document', keywords: 'biography story profile me', icon: 'images/icons/textedit.png' },
   { id: 'certifications', label: 'Certifications', kind: 'Documents', keywords: 'certificates isef icpc nasa ibm earth hack club network schoolhouse be my eyes', icon: 'images/icons/preview.png' },
   { id: 'honors', label: 'Honors', kind: 'Documents', keywords: 'awards recognition wins place leadership service', icon: 'images/icons/apps.png' },

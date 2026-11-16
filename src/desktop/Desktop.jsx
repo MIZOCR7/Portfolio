@@ -40,7 +40,7 @@ export default function Desktop() {
   const [wallpaperId, setWallpaperId] = useStored('ziad-wallpaper', CONFIG.defaultWallpaper)
   const [motionOff, setMotionOff] = useStored('ziad-motion-off', false)
   const [dockSize, setDockSize] = useStored('ziad-dock-size', 58)
-  const [layout, setLayout] = useStored('ziad-desk-layout-v2', {})
+  const [layout, setLayout] = useStored('ziad-desk-layout-v3', {})
   const reduce = motionOff || systemReduce
 
   const [windows, setWindows] = useState([])
@@ -315,7 +315,7 @@ export default function Desktop() {
     setLayout({})
     setSelected(null)
     try {
-      window.localStorage.removeItem('ziad-desk-layout-v2')
+      window.localStorage.removeItem('ziad-desk-layout-v3')
     } catch {
       /* ignore */
     }
@@ -593,7 +593,7 @@ export default function Desktop() {
           onContextMenu={onDeskContextMenu}
         >
           <p className="mb-3 px-1 text-[11px] text-white/65">
-            Two folders, one AI terminal, and a music player. Tap to open.
+            Six folders, one AI terminal, and a music player. Tap to open.
           </p>
           <div className="grid grid-cols-2 gap-x-2 gap-y-4">
             {CONFIG.desktopItems.map(item => (
@@ -709,6 +709,10 @@ export default function Desktop() {
               : [
                   { label: 'Open Projects', action: () => open('folder', 'projects') },
                   { label: 'Open About Me', action: () => open('folder', 'about-me') },
+                  { label: 'Open Achievements', action: () => open('folder', 'achievements') },
+                  { label: 'Open Experience', action: () => open('folder', 'experience') },
+                  { label: 'Open Contact', action: () => open('folder', 'contact') },
+                  { label: 'Open Studio', action: () => open('folder', 'studio') },
                   { label: 'Open Music', action: () => open('music') },
                   { label: 'Open AI Terminal', action: () => open('terminal') },
                   { sep: true },
