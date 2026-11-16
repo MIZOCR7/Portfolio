@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { askGemini, getAgentStatus } from './server/agent.js'
 import { createLiveToken, getLiveStatus } from './server/live.js'
+import { getYouTubeStatus, searchYouTube } from './server/youtube.js'
 
 /* Local stand-ins for the Vercel functions so `npm run dev` can exercise the
    AI terminal and the Gemini Live call without deploying. The key stays in
@@ -52,6 +53,40 @@ function agentApi() {
         }
       })
 
+      server.middlewares.use('/api/youtube', async (req: any, res: any) => {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8')
+        res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600')
+
+        if (req.method !== 'GET') {
+          res.statusCode = 405
+          res.end(JSON.stringify({ error: 'method_not_allowed' }))
+          return
+        }
+
+        const url = new URL(req.url || '/', 'http://localhost')
+        const query = url.searchParams.get('q') || ''
+        if (!query.trim()) {
+          res.statusCode = 200
+          res.end(JSON.stringify(getYouTubeStatus()))
+          return
+        }
+
+        try {
+          const items = await searchYouTube(query, url.searchParams.get('limit'))
+          res.statusCode = 200
+          res.end(JSON.stringify({ items, ...getYouTubeStatus() }))
+        } catch (error: any) {
+          res.statusCode = error.status || 500
+          res.setHeader('Cache-Control', 'no-store')
+          res.end(
+            JSON.stringify({
+              error: error.code || 'youtube_error',
+              message: error.message || 'YouTube search failed.',
+            })
+          )
+        }
+      })
+
       server.middlewares.use('/api/live', async (req: any, res: any) => {
         res.setHeader('Content-Type', 'application/json; charset=utf-8')
         res.setHeader('Cache-Control', 'no-store, max-age=0')
@@ -91,6 +126,7 @@ export default defineConfig(({ mode }) => {
   if (env.GEMINI_MODEL) process.env.GEMINI_MODEL = env.GEMINI_MODEL
   if (env.GEMINI_LIVE_MODEL) process.env.GEMINI_LIVE_MODEL = env.GEMINI_LIVE_MODEL
   if (env.GEMINI_LIVE_VOICE) process.env.GEMINI_LIVE_VOICE = env.GEMINI_LIVE_VOICE
+  if (env.YOUTUBE_API_KEY) process.env.YOUTUBE_API_KEY = env.YOUTUBE_API_KEY
 
   return {
     base: './',

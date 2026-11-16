@@ -20,6 +20,7 @@ import Skills from '../apps/Skills'
 import Notes from '../apps/Notes'
 import Photos from '../apps/Photos'
 import Music from '../apps/Music'
+import YouTube from '../apps/YouTube'
 import Social from '../apps/Social'
 import Contact from '../apps/Contact'
 import Resume from '../apps/Resume'
@@ -448,7 +449,8 @@ export default function Desktop() {
     if (win.app === 'skills') return <Skills onOpenApp={app => open(app)} />
     if (win.app === 'notes') return <Notes />
     if (win.app === 'photos') return <Photos onView={item => open('viewer', item)} />
-    if (win.app === 'music') return <Music />
+    if (win.app === 'music') return <Music onOpenApp={app => open(app)} />
+    if (win.app === 'youtube') return <YouTube />
     if (win.app === 'social') return <Social onLink={openLink} />
     if (win.app === 'contact') return <Contact onCopy={notify} />
     if (win.app === 'resume') return <Resume />
@@ -593,7 +595,7 @@ export default function Desktop() {
           onContextMenu={onDeskContextMenu}
         >
           <p className="mb-3 px-1 text-[11px] text-white/65">
-            Six folders, one AI terminal, and a music player. Tap to open.
+            Six folders, one AI terminal, Music and YouTube. Tap to open.
           </p>
           <div className="grid grid-cols-2 gap-x-2 gap-y-4">
             {CONFIG.desktopItems.map(item => (
@@ -714,6 +716,7 @@ export default function Desktop() {
                   { label: 'Open Contact', action: () => open('folder', 'contact') },
                   { label: 'Open Studio', action: () => open('folder', 'studio') },
                   { label: 'Open Music', action: () => open('music') },
+                  { label: 'Open YouTube', action: () => open('youtube') },
                   { label: 'Open AI Terminal', action: () => open('terminal') },
                   { sep: true },
                   { label: 'Change Wallpaper', action: nextWallpaper },

@@ -34,7 +34,7 @@ export const CONFIG = {
   defaultWallpaper: 'sonoma',
 
   desktop: {
-    hint: 'Six folders are spread across the desk, with the AI Terminal in the middle. Double-click a folder to look inside, or right-click the desktop for more. Music is in Studio and the Dock.',
+    hint: 'Six folders are spread across the desk, with the AI Terminal in the middle. Double-click a folder to look inside, or right-click the desktop for more. Music and YouTube are in Studio and the Dock.',
     resetNote: 'Desktop folders restored to their original places.',
   },
 
@@ -96,7 +96,7 @@ export const CONFIG = {
       folder: 'studio',
       label: 'Studio',
       icon: 'images/icons/folder.png',
-      note: 'Music · notes',
+      note: 'Music · YouTube · notes',
     },
     {
       id: 'terminal',
@@ -234,6 +234,13 @@ export const CONFIG = {
           label: 'Music',
           icon: 'images/icons/music.png',
           meta: 'Desk Sessions · 4 tracks',
+        },
+        {
+          kind: 'app',
+          id: 'youtube',
+          label: 'YouTube',
+          icon: 'images/icons/youtube.svg',
+          meta: 'Search & watch',
         },
         {
           kind: 'app',
@@ -934,6 +941,7 @@ export const dockApps = [
   { id: 'notes', label: 'Notes', icon: 'images/icons/notes.png', app: 'notes' },
   { id: 'photos', label: 'Photos', icon: 'images/icons/photos.png', app: 'photos' },
   { id: 'music', label: 'Music', icon: 'images/icons/music.png', app: 'music' },
+  { id: 'youtube', label: 'YouTube', icon: 'images/icons/youtube.svg', app: 'youtube' },
   { id: 'social', label: 'Social', icon: 'images/icons/safari.png', app: 'social' },
   { id: 'contact', label: 'Email', icon: 'images/icons/mail.png', app: 'contact' },
   { id: 'terminal', label: 'AI Terminal', icon: 'images/icons/terminal.png', app: 'terminal' },
@@ -949,7 +957,8 @@ export const appWindows = {
   skills: { title: 'Skills', w: 820, h: 600 },
   notes: { title: 'Notes', w: 860, h: 560 },
   photos: { title: 'Photos', w: 920, h: 620 },
-  music: { title: 'Music', w: 980, h: 680 },
+  music: { title: 'Music', w: 1000, h: 700 },
+  youtube: { title: 'YouTube', w: 1040, h: 700 },
   social: { title: 'Social', w: 780, h: 560 },
   contact: { title: 'Mail', w: 720, h: 580 },
   resume: { title: 'Résumé', w: 780, h: 680 },
