@@ -18,6 +18,17 @@ const PLAYLISTS = CONFIG.music.playlists.map(playlist => ({
 
 const FREE_CHIPS = ['jazz', 'classical', 'lofi', 'arabic', 'rock', 'electronic']
 
+const RADIO = [
+  { id: 'radio-rp-main', title: 'Radio Paradise', artist: 'Radio Paradise', album: 'Live radio', src: 'https://stream.radioparadise.com/mp3-128', live: true, radio: true, tagline: 'Main mix · rock, world, electronic', tone: 'linear-gradient(135deg, #0f766e 0%, #164e63 60%, #0c2a33 100%)', sourceLabel: 'Radio Paradise · live radio' },
+  { id: 'radio-rp-mellow', title: 'Mellow Mix', artist: 'Radio Paradise', album: 'Live radio', src: 'https://stream.radioparadise.com/mellow-128', live: true, radio: true, tagline: 'Soft, slow and spacious', tone: 'linear-gradient(135deg, #4c1d95 0%, #312e81 55%, #111827 100%)', sourceLabel: 'Radio Paradise · live radio' },
+  { id: 'radio-rp-rock', title: 'Rock Mix', artist: 'Radio Paradise', album: 'Live radio', src: 'https://stream.radioparadise.com/rock-128', live: true, radio: true, tagline: 'Guitars, old and new', tone: 'linear-gradient(135deg, #9d174d 0%, #7e22ce 55%, #1f1235 100%)', sourceLabel: 'Radio Paradise · live radio' },
+  { id: 'radio-rp-global', title: 'Global Mix', artist: 'Radio Paradise', album: 'Live radio', src: 'https://stream.radioparadise.com/global-128', live: true, radio: true, tagline: 'Music without borders', tone: 'linear-gradient(135deg, #92400e 0%, #78350f 55%, #1c1917 100%)', sourceLabel: 'Radio Paradise · live radio' },
+  { id: 'radio-fip', title: 'FIP', artist: 'Radio France', album: 'Live radio', src: 'https://icecast.radiofrance.fr/fip-midfi.mp3', live: true, radio: true, tagline: 'Eclectic, all day', tone: 'linear-gradient(135deg, #1d4ed8 0%, #0f172a 60%, #020617 100%)', sourceLabel: 'FIP · live radio' },
+  { id: 'radio-fip-jazz', title: 'FIP Jazz', artist: 'Radio France', album: 'Live radio', src: 'https://icecast.radiofrance.fr/fipjazz-midfi.mp3', live: true, radio: true, tagline: 'Jazz, soul and groove', tone: 'linear-gradient(135deg, #be123c 0%, #7c2d12 55%, #1c1917 100%)', sourceLabel: 'FIP · live radio' },
+  { id: 'radio-fip-rock', title: 'FIP Rock', artist: 'Radio France', album: 'Live radio', src: 'https://icecast.radiofrance.fr/fiprock-midfi.mp3', live: true, radio: true, tagline: 'Rock, blues and riffs', tone: 'linear-gradient(135deg, #0e7490 0%, #1e1b4b 55%, #020617 100%)', sourceLabel: 'FIP · live radio' },
+  { id: 'radio-france-musique', title: 'France Musique', artist: 'Radio France', album: 'Live radio', src: 'https://icecast.radiofrance.fr/francemusique-midfi.mp3', live: true, radio: true, tagline: 'Classical, beautifully recorded', tone: 'linear-gradient(135deg, #4d7c0f 0%, #365314 55%, #111827 100%)', sourceLabel: 'France Musique · live radio' },
+]
+
 function fmt(value) {
   if (!Number.isFinite(value) || value < 0) return '0:00'
   const minutes = Math.floor(value / 60)
@@ -87,12 +98,19 @@ function Icon({ name, className = 'h-4 w-4' }) {
   }
 }
 
-function Cover({ src, alt = '', className = '' }) {
+function Cover({ src, alt = '', className = '', tone, label }) {
   const [broken, setBroken] = useState(false)
   if (broken || !src) {
     return (
-      <span className={`flex items-center justify-center bg-gradient-to-br from-[#2d2d2d] to-[#181818] text-white/30 ${className}`}>
-        <Icon name="library" className="h-5 w-5" />
+      <span
+        style={tone ? { background: tone } : undefined}
+        className={`flex items-center justify-center bg-gradient-to-br from-[#2d2d2d] to-[#181818] text-white/30 ${className}`}
+      >
+        {label ? (
+          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/85">{label.slice(0, 1)}</span>
+        ) : (
+          <Icon name="library" className="h-5 w-5" />
+        )}
       </span>
     )
   }
@@ -205,6 +223,10 @@ export default function Music({ onOpenApp }) {
   }
 
   const nextTrack = () => {
+    if (active.radio) {
+      nextRadio()
+      return
+    }
     if (!active.local) {
       nextArchive()
       return
@@ -230,6 +252,10 @@ export default function Music({ onOpenApp }) {
       setTime(0)
       return
     }
+    if (active.radio) {
+      previousRadio()
+      return
+    }
     if (!active.local) {
       previousArchive()
       return
@@ -248,6 +274,10 @@ export default function Music({ onOpenApp }) {
       if (!audio) return
       audio.currentTime = 0
       audio.play()
+      return
+    }
+    if (active.live) {
+      nextTrack()
       return
     }
     if (!active.local && !archiveResults.length) {
@@ -280,6 +310,28 @@ export default function Music({ onOpenApp }) {
     setQueue(playlist.tracks)
     wantPlay.current = true
     setActive(playlist.tracks[0])
+  }
+
+  const playRadio = station => {
+    if (!station) return
+    if (active.id === station.id) {
+      toggle()
+      return
+    }
+    setQueue([])
+    setError('')
+    wantPlay.current = true
+    setActive(station)
+  }
+
+  const nextRadio = () => {
+    const index = RADIO.findIndex(station => station.id === active.id)
+    playRadio(RADIO[(index + 1) % RADIO.length])
+  }
+
+  const previousRadio = () => {
+    const index = RADIO.findIndex(station => station.id === active.id)
+    playRadio(RADIO[(index - 1 + RADIO.length) % RADIO.length])
   }
 
   const openYouTube = () => {
@@ -385,7 +437,7 @@ export default function Music({ onOpenApp }) {
   }
 
   const title =
-    localResults ? 'Search' : view === 'songs' ? 'Songs' : view === 'albums' ? 'Albums' : view === 'playlist' ? activePlaylist.name : view === 'free' ? 'Free Music' : 'Good evening'
+    localResults ? 'Search' : view === 'songs' ? 'Songs' : view === 'albums' ? 'Albums' : view === 'playlist' ? activePlaylist.name : view === 'free' ? 'Free Music' : view === 'radio' ? 'Live Radio' : 'Good evening'
 
   const subtitle =
     localResults
@@ -398,10 +450,12 @@ export default function Music({ onOpenApp }) {
             ? `${playlistTracks.length} songs · ${fmt(playlistTracks.length * 48)}`
             : view === 'free'
               ? 'Public-domain and Creative Commons audio from the Internet Archive.'
-              : 'Your desk sessions, free recordings and YouTube, in one place.'
+              : view === 'radio'
+                ? 'Always-on free radio from Radio Paradise and FIP. Pick a station and it starts playing.'
+                : 'Your desk sessions, live radio, free recordings and YouTube, in one place.'
 
-  const progress = duration ? (time / duration) * 100 : 0
-  const playerDuration = duration || active.durationSeconds || 48
+  const progress = duration && Number.isFinite(duration) ? (time / duration) * 100 : 0
+  const playerDuration = active.live ? 0 : duration || active.durationSeconds || 48
 
   const renderTrackTable = list => (
     <div className="overflow-hidden rounded-[10px] border border-white/[0.06] bg-white/[0.025]">
@@ -470,6 +524,40 @@ export default function Music({ onOpenApp }) {
     </div>
   )
 
+  const renderStations = (all = false) => (
+    <div className={`grid grid-cols-2 gap-2 ${all ? 'sm:grid-cols-3 lg:grid-cols-4' : 'sm:grid-cols-4'}`}>
+      {RADIO.slice(0, all ? RADIO.length : 4).map(station => {
+        const current = active.id === station.id
+        return (
+          <button
+            key={station.id}
+            type="button"
+            onClick={() => playRadio(station)}
+            aria-label={`${current && playing ? 'Pause' : 'Play'} ${station.title} live radio`}
+            className={`group min-w-0 overflow-hidden rounded-[9px] text-left outline-none ring-offset-2 ring-offset-[#151515] transition focus-visible:ring-2 focus-visible:ring-[#1ed760] ${current ? 'ring-1 ring-[#1ed760]/70' : ''}`}
+          >
+            <span className="relative flex aspect-[4/3] flex-col justify-between overflow-hidden p-3 shadow-[0_10px_24px_rgba(0,0,0,0.26)]" style={{ background: station.tone }}>
+              <span className="flex items-center gap-1.5 text-[8px] font-semibold uppercase tracking-[0.18em] text-white/55">
+                <span className={`h-1.5 w-1.5 rounded-full ${current && playing ? 'animate-pulse bg-[#78ffa8]' : 'bg-white/45'}`} />
+                {current && playing ? 'Now playing' : station.artist}
+              </span>
+              <span className="flex items-end justify-between gap-2">
+                <span className="min-w-0">
+                  <span className="block truncate text-[13px] font-bold tracking-[-0.02em]">{station.title}</span>
+                  <span className="mt-0.5 block truncate text-[9px] text-white/55">{station.tagline}</span>
+                </span>
+                <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-black/30 text-white shadow-lg backdrop-blur-md transition group-hover:scale-105 group-hover:bg-black/45">
+                  <Icon name={current && playing ? 'pause' : 'play'} className="h-3.5 w-3.5" />
+                </span>
+              </span>
+              <span className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-white/10 blur-2xl" />
+            </span>
+          </button>
+        )
+      })}
+    </div>
+  )
+
   const renderAlbumCards = list => (
     <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-3 lg:grid-cols-4">
       {list.map(item => {
@@ -510,6 +598,9 @@ export default function Music({ onOpenApp }) {
               <button type="button" onClick={() => { setView('songs'); setQuery('') }} className={`flex w-full items-center gap-2.5 rounded-[6px] px-2 py-1.5 text-left text-[11.5px] font-medium ${view === 'songs' || view === 'albums' ? 'text-white' : 'text-white/55 hover:text-white'}`}>
                 <Icon name="search" /> Browse
               </button>
+              <button type="button" onClick={() => setView('radio')} className={`flex w-full items-center gap-2.5 rounded-[6px] px-2 py-1.5 text-left text-[11.5px] font-medium ${view === 'radio' ? 'text-white' : 'text-white/55 hover:text-white'}`}>
+                <Icon name="volume" /> Live Radio
+              </button>
               <button type="button" onClick={openFree} className={`flex w-full items-center gap-2.5 rounded-[6px] px-2 py-1.5 text-left text-[11.5px] font-medium ${view === 'free' ? 'text-white' : 'text-white/55 hover:text-white'}`}>
                 <Icon name="globe" /> Free Music
               </button>
@@ -544,7 +635,7 @@ export default function Music({ onOpenApp }) {
               YouTube
             </button>
             <p className="mt-5 px-1 text-[9px] leading-relaxed text-white/25">
-              Free music is streamed from the Internet Archive. YouTube opens in its official player.
+              Live radio comes from Radio Paradise and FIP. Free recordings stream from the Internet Archive. YouTube opens in its official player.
             </p>
           </div>
         </aside>
@@ -554,6 +645,7 @@ export default function Music({ onOpenApp }) {
             <div className="flex items-center gap-1.5 sm:hidden">
               <img src="images/icons/music.png" alt="" className="h-6 w-6 object-contain" />
               <button type="button" onClick={() => setView('home')} className={`rounded-full px-2 py-1 text-[10px] ${view === 'home' ? 'bg-white/15 text-white' : 'text-white/50'}`}>Home</button>
+              <button type="button" onClick={() => setView('radio')} className={`rounded-full px-2 py-1 text-[10px] ${view === 'radio' ? 'bg-white/15 text-white' : 'text-white/50'}`}>Radio</button>
               <button type="button" onClick={openFree} className={`rounded-full px-2 py-1 text-[10px] ${view === 'free' ? 'bg-white/15 text-white' : 'text-white/50'}`}>Free</button>
               <button type="button" onClick={openYouTube} className="rounded-full px-2 py-1 text-[10px] text-white/50">YouTube</button>
             </div>
@@ -604,6 +696,7 @@ export default function Music({ onOpenApp }) {
                           <Icon name="play" className="h-3.5 w-3.5" /> Play
                         </button>
                         <button type="button" onClick={() => setView('playlist')} className="rounded-full border border-white/20 bg-white/10 px-3 py-2 text-[10px] font-medium text-white/80 hover:bg-white/15">Open playlist</button>
+                        <button type="button" onClick={() => playRadio(RADIO[0])} className="rounded-full border border-[#1ed760]/30 bg-[#1ed760]/10 px-3 py-2 text-[10px] font-semibold text-[#8dffb2] hover:bg-[#1ed760]/15">Live radio</button>
                       </div>
                     </div>
                   </div>
@@ -629,6 +722,14 @@ export default function Music({ onOpenApp }) {
                 </div>
 
                 <div className="mb-3 mt-6 flex items-end justify-between">
+                  <div>
+                    <h2 className="text-[17px] font-bold tracking-[-0.025em]">Live radio</h2>
+                    <p className="mt-0.5 text-[10px] text-white/35">Free, always on · Radio Paradise + FIP</p>
+                  </div>
+                  <button type="button" onClick={() => setView('radio')} className="text-[10.5px] font-semibold text-white/45 hover:text-white">All stations</button>
+                </div>
+                {renderStations(false)}
+                <div className="mb-3 mt-7 flex items-end justify-between">
                   <div>
                     <h2 className="text-[17px] font-bold tracking-[-0.025em]">Made for Ziad</h2>
                     <p className="mt-0.5 text-[10px] text-white/35">The Desk Sessions record</p>
@@ -706,6 +807,16 @@ export default function Music({ onOpenApp }) {
                   </div>
                 )}
               </>
+            ) : view === 'radio' ? (
+              <>
+                <div className="mb-4 rounded-[10px] border border-white/[0.08] bg-gradient-to-br from-[#173c2a] to-[#151515] p-4">
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8dffb2]/70">Always on</p>
+                  <p className="mt-1 max-w-[54ch] text-[12px] leading-relaxed text-white/65">
+                    Eight free stations from Radio Paradise and FIP, streamed live. No account, no playlist to finish — press one and the music starts.
+                  </p>
+                </div>
+                {renderStations(true)}
+              </>
             ) : view === 'albums' ? (
               renderAlbumCards(LOCAL)
             ) : view === 'playlist' ? (
@@ -732,7 +843,7 @@ export default function Music({ onOpenApp }) {
 
       <div className="flex h-[88px] flex-none items-center gap-2 border-t border-white/[0.08] bg-[#181818] px-2.5 sm:gap-4 sm:px-4">
         <div className="flex min-w-0 items-center gap-2 sm:w-[220px]">
-          <Cover src={active.cover} alt="" className="h-11 w-11 flex-none rounded-[5px] object-cover shadow-md" />
+          <Cover src={active.cover} tone={active.tone} label={active.title} alt="" className="h-11 w-11 flex-none rounded-[5px] object-cover shadow-md" />
           <div className="hidden min-w-0 flex-1 sm:block">
             <p className="truncate text-[11.5px] font-semibold">{active.title}</p>
             <p className="truncate text-[9.5px] text-white/40">{active.artist} · {active.sourceLabel}</p>
@@ -756,25 +867,32 @@ export default function Music({ onOpenApp }) {
               <Icon name={repeat === 'one' ? 'repeatOne' : 'repeat'} className="h-3.5 w-3.5" />
             </IconButton>
           </div>
-          <div className="flex w-full max-w-[440px] items-center gap-2">
-            <span className="w-7 text-right text-[8.5px] tabular-nums text-white/35">{fmt(time)}</span>
-            <input
-              type="range"
-              min="0"
-              max={playerDuration}
-              step="0.1"
-              value={Math.min(time, playerDuration)}
-              onChange={e => {
-                const next = Number(e.target.value)
-                if (audioRef.current) audioRef.current.currentTime = next
-                setTime(next)
-              }}
-              aria-label="Playback position"
-              className="music-range h-1 min-w-0 flex-1"
-              style={fillStyle(progress)}
-            />
-            <span className="w-8 text-[8.5px] tabular-nums text-white/35">-{fmt(Math.max(0, playerDuration - time))}</span>
-          </div>
+          {active.live ? (
+            <div className="flex h-4 items-center gap-2 text-[8.5px] font-semibold uppercase tracking-[0.16em] text-[#8dffb2]/75">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#1ed760]" />
+              Live · {active.artist}
+            </div>
+          ) : (
+            <div className="flex w-full max-w-[440px] items-center gap-2">
+              <span className="w-7 text-right text-[8.5px] tabular-nums text-white/35">{fmt(time)}</span>
+              <input
+                type="range"
+                min="0"
+                max={playerDuration}
+                step="0.1"
+                value={Math.min(time, playerDuration)}
+                onChange={e => {
+                  const next = Number(e.target.value)
+                  if (audioRef.current) audioRef.current.currentTime = next
+                  setTime(next)
+                }}
+                aria-label="Playback position"
+                className="music-range h-1 min-w-0 flex-1"
+                style={fillStyle(progress)}
+              />
+              <span className="w-8 text-[8.5px] tabular-nums text-white/35">-{fmt(Math.max(0, playerDuration - time))}</span>
+            </div>
+          )}
         </div>
 
         <div className="hidden flex-none items-center justify-end gap-1.5 md:flex md:w-[150px]">
@@ -802,16 +920,17 @@ export default function Music({ onOpenApp }) {
       <audio
         ref={audioRef}
         src={active.src}
-        preload="metadata"
+        preload={active.live ? 'none' : 'metadata'}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onTimeUpdate={e => setTime(e.currentTarget.currentTime)}
         onLoadedMetadata={e => {
-          setDuration(e.currentTarget.duration || active.durationSeconds || 48)
-          setTime(e.currentTarget.currentTime)
+          const loaded = e.currentTarget.duration
+          setDuration(Number.isFinite(loaded) ? loaded : 0)
+          setTime(Number.isFinite(e.currentTarget.currentTime) ? e.currentTarget.currentTime : 0)
         }}
         onEnded={endTrack}
-        onError={() => setError(active.local ? 'This track could not be loaded. Try another one.' : 'That Internet Archive recording could not be streamed.')}
+        onError={() => setError(active.live ? 'This radio stream is unavailable. Try another station.' : active.local ? 'This track could not be loaded. Try another one.' : 'That Internet Archive recording could not be streamed.')}
       />
 
       {queueOpen ? (
@@ -824,6 +943,9 @@ export default function Music({ onOpenApp }) {
             <IconButton label="Close queue" onClick={() => setQueueOpen(false)} className="h-6 w-6"><Icon name="close" className="h-3.5 w-3.5" /></IconButton>
           </div>
           <div className="max-h-[220px] overflow-y-auto p-1.5">
+            {!queue.length ? (
+              <p className="px-2 py-4 text-[10px] leading-relaxed text-white/40">Live radio plays continuously. Open a playlist or free-music result to build a queue.</p>
+            ) : null}
             {queue.map(item => (
               <button key={item.id} type="button" onClick={() => playLocal(item, queue)} className={`flex w-full items-center gap-2 rounded-[5px] px-2 py-1.5 text-left hover:bg-white/[0.07] ${active.id === item.id ? 'bg-white/[0.07]' : ''}`}>
                 <Cover src={item.cover} className="h-8 w-8 rounded-[4px] object-cover" />

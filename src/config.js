@@ -34,7 +34,7 @@ export const CONFIG = {
   defaultWallpaper: 'sonoma',
 
   desktop: {
-    hint: 'Six folders are spread across the desk, with the AI Terminal in the middle. Double-click a folder to look inside, or right-click the desktop for more. Music and YouTube are in Studio and the Dock.',
+    hint: 'Six folders are spread across the desk, with the AI Terminal in the middle. Double-click a folder to look inside, or right-click the desktop for more. Safari and Love are in the Dock; Music and YouTube are in Studio too.',
     resetNote: 'Desktop folders restored to their original places.',
   },
 
@@ -211,7 +211,7 @@ export const CONFIG = {
           kind: 'app',
           id: 'social',
           label: 'Social',
-          icon: 'images/icons/safari.png',
+          icon: 'images/icons/contacts.png',
           meta: 'GitHub · LinkedIn · Instagram',
         },
         {
@@ -940,9 +940,11 @@ export const dockApps = [
   { id: 'about-me', label: 'About Me', icon: 'images/icons/folder.png', app: 'folder', data: 'about-me', windowKey: 'folder:about-me' },
   { id: 'notes', label: 'Notes', icon: 'images/icons/notes.png', app: 'notes' },
   { id: 'photos', label: 'Photos', icon: 'images/icons/photos.png', app: 'photos' },
+  { id: 'browser', label: 'Safari', icon: 'images/icons/safari.png', app: 'browser' },
   { id: 'music', label: 'Music', icon: 'images/icons/music.png', app: 'music' },
   { id: 'youtube', label: 'YouTube', icon: 'images/icons/youtube.svg', app: 'youtube' },
-  { id: 'social', label: 'Social', icon: 'images/icons/safari.png', app: 'social' },
+  { id: 'love', label: 'Love', icon: 'images/icons/love.svg', app: 'love' },
+  { id: 'social', label: 'Social', icon: 'images/icons/contacts.png', app: 'social' },
   { id: 'contact', label: 'Email', icon: 'images/icons/mail.png', app: 'contact' },
   { id: 'terminal', label: 'AI Terminal', icon: 'images/icons/terminal.png', app: 'terminal' },
 ]
@@ -957,8 +959,10 @@ export const appWindows = {
   skills: { title: 'Skills', w: 820, h: 600 },
   notes: { title: 'Notes', w: 860, h: 560 },
   photos: { title: 'Photos', w: 920, h: 620 },
+  browser: { title: 'Safari', w: 1080, h: 720 },
   music: { title: 'Music', w: 1000, h: 700 },
   youtube: { title: 'YouTube', w: 1040, h: 700 },
+  love: { title: 'Love', w: 560, h: 480 },
   social: { title: 'Social', w: 780, h: 560 },
   contact: { title: 'Mail', w: 720, h: 580 },
   resume: { title: 'Résumé', w: 780, h: 680 },

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="love-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#ff7aa2"/>
+      <stop offset=".46" stop-color="#ff3b6b"/>
+      <stop offset="1" stop-color="#d90f43"/>
+    </linearGradient>
+    <linearGradient id="love-shine" x1=".2" y1="0" x2=".7" y2="1">
+      <stop stop-color="#fff" stop-opacity=".94"/>
+      <stop offset="1" stop-color="#ffe4ec"/>
+    </linearGradient>
+    <filter id="love-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#8c0f35" flood-opacity=".35"/>
+    </filter>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="29" fill="url(#love-bg)"/>
+  <path d="M27 17c13-6 27-7 40-5" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="4" opacity=".16"/>
+  <path d="M64 99S27 78 27 52.5C27 39.5 37 31 49 31c7 0 12.5 4 15 9 2.5-5 8-9 15-9 12 0 22 8.5 22 21.5C101 78 64 99 64 99Z" fill="url(#love-shine)" filter="url(#love-shadow)"/>
+  <path d="M45 47c2-5 6-7 11-7" fill="none" stroke="#ffd4df" stroke-linecap="round" stroke-width="3" opacity=".75"/>
+</svg>

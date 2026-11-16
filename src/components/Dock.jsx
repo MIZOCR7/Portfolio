@@ -11,6 +11,7 @@ export default function Dock({
   size = 58,
   motionOff,
   compact,
+  width = 1200,
 }) {
   const dockRef = useRef(null)
   const itemRefs = useRef({})
@@ -22,6 +23,9 @@ export default function Dock({
     { id: 'launchpad', label: 'Launchpad', icon: 'images/icons/apps.png', special: 'launchpad' },
     { id: 'reset', label: 'Reset Layout', icon: 'images/trash.png', special: 'reset' },
   ]
+  const compactSize = compact
+    ? Math.max(24, Math.min(size - 28, Math.floor((width - 20) / items.length) - 2))
+    : size
 
   const reset = () => {
     Object.values(itemRefs.current).forEach(el => {
@@ -74,7 +78,7 @@ export default function Dock({
         onPointerEnter={measure}
         onPointerMove={onMove}
         onPointerLeave={reset}
-        className={`dock-bar flex items-end rounded-[22px] border border-white/30 bg-white/25 shadow-[0_16px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl dark:border-white/15 dark:bg-black/35 ${compact ? 'gap-1 px-2 py-1.5' : 'gap-2 px-2.5 pb-2 pt-1.5'}`}
+        className={`dock-bar flex items-end rounded-[22px] border border-white/30 bg-white/25 shadow-[0_16px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl dark:border-white/15 dark:bg-black/35 ${compact ? 'gap-0.5 px-1.5 py-1.5' : 'gap-2 px-2.5 pb-2 pt-1.5'}`}
       >
         {items.map((item, i) => {
           const isRunning = item.special ? false : running.includes(item.windowKey || item.id)
@@ -90,7 +94,7 @@ export default function Dock({
                 onBlur={() => setHovered(null)}
                 aria-label={item.label}
                 className="dock-item group relative block rounded-[22%] outline-none transition-transform duration-150 ease-out"
-                style={{ width: compact ? Math.max(30, size - 28) : size, height: compact ? Math.max(30, size - 28) : size }}
+                style={{ width: compactSize, height: compactSize }}
               >
                 <img
                   src={item.icon}
