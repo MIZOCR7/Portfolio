@@ -157,6 +157,12 @@ export default function Music({ onOpenApp }) {
   const [archiveError, setArchiveError] = useState('')
   const [resolving, setResolving] = useState(null)
 
+  const [catalogQuery, setCatalogQuery] = useState('Amr Diab')
+  const [catalogResults, setCatalogResults] = useState([])
+  const [catalogLoading, setCatalogLoading] = useState(false)
+  const [catalogError, setCatalogError] = useState('')
+  const [catalogSource, setCatalogSource] = useState('')
+
   const audioRef = useRef(null)
   const wantPlay = useRef(false)
 
@@ -227,6 +233,10 @@ export default function Music({ onOpenApp }) {
       nextRadio()
       return
     }
+    if (active.catalog) {
+      nextCatalog()
+      return
+    }
     if (!active.local) {
       nextArchive()
       return
@@ -256,6 +266,10 @@ export default function Music({ onOpenApp }) {
       previousRadio()
       return
     }
+    if (active.catalog) {
+      previousCatalog()
+      return
+    }
     if (!active.local) {
       previousArchive()
       return
@@ -278,6 +292,10 @@ export default function Music({ onOpenApp }) {
     }
     if (active.live) {
       nextTrack()
+      return
+    }
+    if (active.catalog) {
+      nextCatalog()
       return
     }
     if (!active.local && !archiveResults.length) {
@@ -385,6 +403,87 @@ export default function Music({ onOpenApp }) {
     if (!archiveResults.length && !archiveLoading) searchArchive('jazz')
   }
 
+  const searchCatalog = async value => {
+    const term = (value ?? catalogQuery).trim()
+    if (!term) return
+    setCatalogQuery(term)
+    setView('catalog')
+    setQuery('')
+    setCatalogLoading(true)
+    setCatalogError('')
+    try {
+      const params = new URLSearchParams({
+        term,
+        media: 'music',
+        entity: 'song',
+        limit: '24',
+        country: 'US',
+      })
+      const res = await fetch(`https://itunes.apple.com/search?${params.toString()}`)
+      if (!res.ok) throw new Error('The music catalogue is unavailable right now.')
+      const data = await res.json()
+      const items = (data.results || [])
+        .filter(track => track?.previewUrl && track?.trackName)
+        .map(track => ({
+          id: `itunes:${track.trackId}`,
+          title: track.trackName,
+          artist: track.artistName || 'Unknown artist',
+          album: track.collectionName || 'Single',
+          cover: (track.artworkUrl100 || '').replace('100x100bb', '600x600bb'),
+          src: track.previewUrl,
+          catalog: true,
+          local: false,
+          durationSeconds: 30,
+          durationLabel: '0:30',
+          sourceLabel: '30-second preview · Apple Music',
+          spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(`${track.trackName} ${track.artistName || ''}`)}`,
+          appleUrl: track.trackViewUrl || '',
+        }))
+      setCatalogResults(items)
+      setCatalogSource(`${items.length} playable previews`)
+      if (!items.length) setCatalogError('No playable previews matched that search. Try another spelling or artist.')
+    } catch (err) {
+      setCatalogResults([])
+      setCatalogSource('')
+      setCatalogError(err.message || 'Could not search the music catalogue.')
+    } finally {
+      setCatalogLoading(false)
+    }
+  }
+
+  const openCatalog = () => {
+    setView('catalog')
+    setQuery('')
+    if (!catalogResults.length && !catalogLoading) searchCatalog(catalogQuery)
+  }
+
+  const playCatalog = (item, list = catalogResults) => {
+    if (!item) return
+    setQueue(list)
+    setError('')
+    if (active.id === item.id) {
+      if (audioRef.current?.paused) toggle()
+      return
+    }
+    wantPlay.current = true
+    setActive(item)
+  }
+
+  const nextCatalog = () => {
+    if (!catalogResults.length) {
+      setPlaying(false)
+      return
+    }
+    const index = catalogResults.findIndex(item => item.id === active.id)
+    playCatalog(catalogResults[(index + 1) % catalogResults.length])
+  }
+
+  const previousCatalog = () => {
+    if (!catalogResults.length) return
+    const index = catalogResults.findIndex(item => item.id === active.id)
+    playCatalog(catalogResults[(index - 1 + catalogResults.length) % catalogResults.length])
+  }
+
   const playArchive = async item => {
     if (!item?.identifier || resolving) return
     setResolving(item.identifier)
@@ -437,7 +536,7 @@ export default function Music({ onOpenApp }) {
   }
 
   const title =
-    localResults ? 'Search' : view === 'songs' ? 'Songs' : view === 'albums' ? 'Albums' : view === 'playlist' ? activePlaylist.name : view === 'free' ? 'Free Music' : view === 'radio' ? 'Live Radio' : 'Good evening'
+    localResults ? 'Search' : view === 'songs' ? 'Songs' : view === 'albums' ? 'Albums' : view === 'playlist' ? activePlaylist.name : view === 'free' ? 'Free Music' : view === 'radio' ? 'Live Radio' : view === 'catalog' ? 'Catalogue' : 'Good evening'
 
   const subtitle =
     localResults
@@ -452,7 +551,9 @@ export default function Music({ onOpenApp }) {
               ? 'Public-domain and Creative Commons audio from the Internet Archive.'
               : view === 'radio'
                 ? 'Always-on free radio from Radio Paradise and FIP. Pick a station and it starts playing.'
-                : 'Your desk sessions, live radio, free recordings and YouTube, in one place.'
+                : view === 'catalog'
+                  ? `${catalogSource || 'Real songs, playable now'} for “${catalogQuery}” · 30-second previews, with Spotify links for the full track.`
+                  : 'Your desk sessions, live radio, free recordings and YouTube, in one place.'
 
   const progress = duration && Number.isFinite(duration) ? (time / duration) * 100 : 0
   const playerDuration = active.live ? 0 : duration || active.durationSeconds || 48
@@ -480,7 +581,7 @@ export default function Music({ onOpenApp }) {
                 playLocal(item, list)
               }
             }}
-            className={`group grid cursor-default grid-cols-[24px_minmax(0,1fr)_58px_32px] items-center gap-2 border-b border-white/[0.045] px-3 py-2 text-left outline-none last:border-0 hover:bg-white/[0.06] sm:grid-cols-[24px_minmax(0,1.7fr)_minmax(0,1fr)_58px_32px] ${
+            className={`group grid grid-cols-[24px_minmax(0,1fr)_58px_32px] items-center gap-2 border-b border-white/[0.045] px-3 py-2 text-left outline-none last:border-0 hover:bg-white/[0.06] sm:grid-cols-[24px_minmax(0,1.7fr)_minmax(0,1fr)_58px_32px] ${
               current ? 'bg-white/[0.06]' : ''
             }`}
           >
@@ -579,6 +680,47 @@ export default function Music({ onOpenApp }) {
     </div>
   )
 
+  const renderCatalogCards = list => (
+    <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      {list.map(item => {
+        const current = active.id === item.id
+        return (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => playCatalog(item, list)}
+            className="group min-w-0 text-left outline-none"
+            aria-label={`Play ${item.title} by ${item.artist}`}
+          >
+            <span className="relative block aspect-square overflow-hidden rounded-[8px] bg-white/[0.04] shadow-[0_10px_24px_rgba(0,0,0,0.25)]">
+              <Cover
+                src={item.cover}
+                alt={`${item.album} cover`}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+              />
+              <span className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+              <span className="absolute left-1.5 top-1.5 rounded-full bg-black/60 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-white/75 backdrop-blur-md">
+                Preview
+              </span>
+              <span
+                className={`absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-full bg-[#1ed760] text-black shadow-xl transition-all ${
+                  current ? 'opacity-100' : 'translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'
+                }`}
+              >
+                <Icon name={current && playing ? 'pause' : 'play'} className="h-4 w-4" />
+              </span>
+            </span>
+            <span className={`mt-2 block truncate text-[11.5px] font-semibold ${current ? 'text-[#1ed760]' : 'text-white/90'}`}>
+              {item.title}
+            </span>
+            <span className="block truncate text-[10px] text-white/40">{item.artist}</span>
+            <span className="mt-0.5 block truncate text-[9px] text-white/25">{item.album}</span>
+          </button>
+        )
+      })}
+    </div>
+  )
+
   return (
     <div className="flex h-full flex-col bg-[#121212] text-white">
       <div className="flex min-h-0 flex-1">
@@ -596,7 +738,10 @@ export default function Music({ onOpenApp }) {
                 <Icon name="home" /> Home
               </button>
               <button type="button" onClick={() => { setView('songs'); setQuery('') }} className={`flex w-full items-center gap-2.5 rounded-[6px] px-2 py-1.5 text-left text-[11.5px] font-medium ${view === 'songs' || view === 'albums' ? 'text-white' : 'text-white/55 hover:text-white'}`}>
-                <Icon name="search" /> Browse
+                <Icon name="library" /> Browse
+              </button>
+              <button type="button" onClick={openCatalog} className={`flex w-full items-center gap-2.5 rounded-[6px] px-2 py-1.5 text-left text-[11.5px] font-medium ${view === 'catalog' ? 'text-white' : 'text-white/55 hover:text-white'}`}>
+                <Icon name="search" /> Catalogue
               </button>
               <button type="button" onClick={() => setView('radio')} className={`flex w-full items-center gap-2.5 rounded-[6px] px-2 py-1.5 text-left text-[11.5px] font-medium ${view === 'radio' ? 'text-white' : 'text-white/55 hover:text-white'}`}>
                 <Icon name="volume" /> Live Radio
@@ -635,7 +780,7 @@ export default function Music({ onOpenApp }) {
               YouTube
             </button>
             <p className="mt-5 px-1 text-[9px] leading-relaxed text-white/25">
-              Live radio comes from Radio Paradise and FIP. Free recordings stream from the Internet Archive. YouTube opens in its official player.
+              Live radio comes from Radio Paradise and FIP. The catalogue plays 30-second Apple Music previews and links full tracks to Spotify. Free recordings stream from the Internet Archive.
             </p>
           </div>
         </aside>
@@ -647,6 +792,7 @@ export default function Music({ onOpenApp }) {
               <button type="button" onClick={() => setView('home')} className={`rounded-full px-2 py-1 text-[10px] ${view === 'home' ? 'bg-white/15 text-white' : 'text-white/50'}`}>Home</button>
               <button type="button" onClick={() => setView('radio')} className={`rounded-full px-2 py-1 text-[10px] ${view === 'radio' ? 'bg-white/15 text-white' : 'text-white/50'}`}>Radio</button>
               <button type="button" onClick={openFree} className={`rounded-full px-2 py-1 text-[10px] ${view === 'free' ? 'bg-white/15 text-white' : 'text-white/50'}`}>Free</button>
+              <button type="button" onClick={openCatalog} className={`rounded-full px-2 py-1 text-[10px] ${view === 'catalog' ? 'bg-white/15 text-white' : 'text-white/50'}`}>Search</button>
               <button type="button" onClick={openYouTube} className="rounded-full px-2 py-1 text-[10px] text-white/50">YouTube</button>
             </div>
             <div className="hidden items-center gap-1 text-[10px] text-white/35 sm:flex">
@@ -702,7 +848,15 @@ export default function Music({ onOpenApp }) {
                   </div>
                 </section>
 
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  <button type="button" onClick={openCatalog} className="group flex min-h-[92px] items-center gap-3 rounded-[10px] border border-[#1ed760]/20 bg-gradient-to-br from-[#173c2a] to-[#101b15] p-3 text-left transition hover:border-[#1ed760]/45">
+                    <span className="flex h-11 w-11 flex-none items-center justify-center rounded-[8px] bg-[#1ed760]/15 text-[#1ed760]"><Icon name="search" className="h-5 w-5" /></span>
+                    <span className="min-w-0">
+                      <span className="block text-[12px] font-semibold">Search 100M songs</span>
+                      <span className="mt-0.5 block text-[10px] leading-relaxed text-white/45">Real tracks and album art. Play a 30-second preview, then open Spotify.</span>
+                    </span>
+                    <Icon name="chevron" className="ml-auto h-4 w-4 flex-none text-white/30 group-hover:text-white/60" />
+                  </button>
                   <button type="button" onClick={openFree} className="group flex min-h-[92px] items-center gap-3 rounded-[10px] border border-white/[0.08] bg-gradient-to-br from-[#173c2a] to-[#18231d] p-3 text-left transition hover:border-[#1ed760]/30">
                     <span className="flex h-11 w-11 flex-none items-center justify-center rounded-[8px] bg-[#1ed760]/15 text-[#1ed760]"><Icon name="globe" className="h-5 w-5" /></span>
                     <span className="min-w-0">
@@ -742,6 +896,82 @@ export default function Music({ onOpenApp }) {
                   <button type="button" onClick={() => setView('songs')} className="text-[10.5px] font-semibold text-white/45 hover:text-white">See all</button>
                 </div>
                 {renderTrackTable(LOCAL)}
+              </>
+            ) : view === 'catalog' ? (
+              <>
+                <div className="mb-4 flex flex-wrap items-center gap-2 rounded-[10px] border border-[#1ed760]/20 bg-gradient-to-r from-[#173c2a]/80 to-white/[0.03] p-3">
+                  <span className="flex h-9 w-9 flex-none items-center justify-center rounded-[8px] bg-[#1ed760]/15">
+                    <img src="images/icons/spotify.svg" alt="" className="h-5 w-5" />
+                  </span>
+                  <form
+                    onSubmit={e => {
+                      e.preventDefault()
+                      searchCatalog(catalogQuery)
+                    }}
+                    className="flex min-w-[180px] flex-1 items-center gap-2"
+                  >
+                    <input
+                      value={catalogQuery}
+                      onChange={e => setCatalogQuery(e.target.value)}
+                      placeholder="Search any song, artist or album"
+                      aria-label="Search the music catalogue"
+                      className="h-8 min-w-0 flex-1 rounded-full border border-white/10 bg-[#121212] px-3 text-[11px] text-white outline-none placeholder:text-white/35 focus:border-[#1ed760]/40"
+                    />
+                    <button type="submit" disabled={catalogLoading} className="h-8 flex-none rounded-full bg-[#1ed760] px-3.5 text-[10.5px] font-bold text-black hover:brightness-110 disabled:opacity-50">
+                      {catalogLoading ? 'Searching…' : 'Search'}
+                    </button>
+                  </form>
+                  <a
+                    href={`https://open.spotify.com/search/${encodeURIComponent(catalogQuery)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex h-8 flex-none items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.06] px-3 text-[10px] font-semibold text-white/75 hover:border-[#1ed760]/40 hover:text-white"
+                  >
+                    <img src="images/icons/spotify.svg" alt="" className="h-3.5 w-3.5" />
+                    Open in Spotify ↗
+                  </a>
+                </div>
+                <div className="mb-4 flex flex-wrap gap-1.5">
+                  {['Amr Diab', 'lofi', 'jazz', 'Coldplay', 'Egyptian pop', 'classical'].map(chip => (
+                    <button key={chip} type="button" onClick={() => searchCatalog(chip)} className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[10px] text-white/55 hover:border-white/25 hover:text-white">
+                      {chip}
+                    </button>
+                  ))}
+                </div>
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2 px-0.5">
+                  <p className="text-[9.5px] leading-relaxed text-white/30">
+                    Album art and 30-second previews from the Apple Music catalogue. Full songs open in Spotify.
+                  </p>
+                  {catalogResults.length ? (
+                    <button
+                      type="button"
+                      onClick={() => playCatalog(catalogResults[0])}
+                      className="flex h-8 items-center gap-1.5 rounded-full bg-[#1ed760] px-3.5 text-[10.5px] font-bold text-black hover:brightness-110"
+                    >
+                      <Icon name="play" className="h-3 w-3" /> Play results
+                    </button>
+                  ) : null}
+                </div>
+                {catalogError ? <div className="mb-3 rounded-[8px] border border-[#ff4d5a]/25 bg-[#ff4d5a]/[0.08] px-3 py-2 text-[11px] text-[#ff9aa2]">{catalogError}</div> : null}
+                {catalogLoading ? (
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <div key={i} className="animate-pulse">
+                        <div className="aspect-square rounded-[8px] bg-white/[0.06]" />
+                        <div className="mt-2 h-3 w-4/5 rounded bg-white/[0.06]" />
+                        <div className="mt-1.5 h-2.5 w-1/2 rounded bg-white/[0.04]" />
+                      </div>
+                    ))}
+                  </div>
+                ) : catalogResults.length ? (
+                  renderCatalogCards(catalogResults)
+                ) : (
+                  <div className="rounded-[10px] border border-dashed border-white/15 px-5 py-14 text-center">
+                    <img src="images/icons/spotify.svg" alt="" className="mx-auto h-9 w-9 opacity-60" />
+                    <p className="mt-3 text-[12px] text-white/50">Search the catalogue for a real song.</p>
+                    <p className="mt-1 text-[10px] text-white/30">Try “Amr Diab”, “lofi”, “jazz” or “Coldplay”.</p>
+                  </div>
+                )}
               </>
             ) : view === 'free' ? (
               <>
@@ -853,14 +1083,31 @@ export default function Music({ onOpenApp }) {
               <Icon name={liked.has(active.id) ? 'heartFill' : 'heart'} className="h-3.5 w-3.5" />
             </IconButton>
           ) : null}
+          {active.spotifyUrl ? (
+            <a
+              href={active.spotifyUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Open this song in Spotify"
+              title="Open the full song in Spotify"
+              className="hidden h-7 w-7 flex-none items-center justify-center rounded-full text-[#1ed760] hover:bg-white/10 sm:flex"
+            >
+              <img src="images/icons/spotify.svg" alt="" className="h-4 w-4" />
+            </a>
+          ) : null}
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col items-center gap-1">
           <div className="flex items-center gap-1 sm:gap-3">
             <IconButton label="Shuffle" onClick={() => setShuffle(v => !v)} active={shuffle} className="h-7 w-7"><Icon name="shuffle" className="h-3.5 w-3.5" /></IconButton>
             <IconButton label="Previous track" onClick={previousTrack} className="h-7 w-7"><Icon name="prev" className="h-3.5 w-3.5" /></IconButton>
-            <button type="button" onClick={toggle} aria-label={playing ? 'Pause' : 'Play'} className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow-lg transition hover:scale-105">
-              <Icon name={playing ? 'pause' : 'play'} className="h-4 w-4" />
+            <button
+              type="button"
+              onClick={toggle}
+              aria-label={playing ? 'Pause' : 'Play'}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1ed760] text-black shadow-[0_6px_22px_rgba(30,215,96,0.32)] ring-2 ring-[#1ed760]/25 transition hover:scale-105 hover:brightness-110 active:scale-95"
+            >
+              <Icon name={playing ? 'pause' : 'play'} className={`h-[15px] w-[15px] ${playing ? '' : 'translate-x-[1px]'}`} />
             </button>
             <IconButton label="Next track" onClick={nextTrack} className="h-7 w-7"><Icon name="next" className="h-3.5 w-3.5" /></IconButton>
             <IconButton label={repeat === 'one' ? 'Repeat one' : repeat === 'all' ? 'Repeat all' : 'Repeat off'} onClick={cycleRepeat} active={repeat !== 'off'} className="h-7 w-7">
@@ -930,7 +1177,17 @@ export default function Music({ onOpenApp }) {
           setTime(Number.isFinite(e.currentTarget.currentTime) ? e.currentTarget.currentTime : 0)
         }}
         onEnded={endTrack}
-        onError={() => setError(active.live ? 'This radio stream is unavailable. Try another station.' : active.local ? 'This track could not be loaded. Try another one.' : 'That Internet Archive recording could not be streamed.')}
+        onError={() =>
+          setError(
+            active.live
+              ? 'This radio stream is unavailable. Try another station.'
+              : active.catalog
+                ? 'That 30-second preview could not be loaded. Try another result, or open the full song in Spotify.'
+                : active.local
+                  ? 'This track could not be loaded. Try another one.'
+                  : 'That Internet Archive recording could not be streamed.'
+          )
+        }
       />
 
       {queueOpen ? (

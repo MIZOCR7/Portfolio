@@ -1,6 +1,9 @@
 export default function Love() {
   return (
-    <div className="relative flex h-full items-center justify-center overflow-hidden bg-[#160b12] text-white">
+    <div
+      className="relative flex h-full items-center justify-center overflow-hidden bg-[#160b12] bg-cover bg-center text-white"
+      style={{ backgroundImage: "url('media/love.jpeg')" }}
+    >
       <div
         className="absolute inset-[-20%] scale-110 blur-3xl"
         style={{
@@ -9,7 +12,7 @@ export default function Love() {
         }}
         aria-hidden="true"
       />
-      <div className="absolute inset-0 bg-[#160b12]/35 backdrop-blur-3xl" aria-hidden="true" />
+      <div className="absolute inset-0 bg-[#160b12]/25 backdrop-blur-2xl" aria-hidden="true" />
       <div className="relative mx-5 w-full max-w-[430px] overflow-hidden rounded-[22px] border border-white/15 bg-white/[0.07] px-7 py-9 text-center shadow-[0_30px_80px_rgba(0,0,0,0.4)] backdrop-blur-2xl">
         <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent" aria-hidden="true" />
         <img

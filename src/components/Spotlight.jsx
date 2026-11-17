@@ -17,6 +17,8 @@ const APP_ITEMS = [
   { id: 'photos', label: 'Photos', kind: 'Application', keywords: 'photos gallery pictures portrait', icon: 'images/icons/photos.png' },
   { id: 'browser', label: 'Safari', kind: 'Application', keywords: 'browser web internet safari search google wikipedia archive browse', icon: 'images/icons/safari.png' },
   { id: 'music', label: 'Music', kind: 'Application', keywords: 'music player songs listen audio desk sessions night shift clean build after the fair spotify radio free archive', icon: 'images/icons/music.png' },
+  { id: 'clock', label: 'Clock', kind: 'Application', keywords: 'clock time world clock stopwatch timer countdown alarm timezone', icon: 'images/icons/clock.svg' },
+  { id: 'calculator', label: 'Calculator', kind: 'Application', keywords: 'calculator math numbers arithmetic add subtract multiply divide percent', icon: 'images/icons/calculator.svg' },
   { id: 'youtube', label: 'YouTube', kind: 'Application', keywords: 'youtube videos watch search music live lecture stream', icon: 'images/icons/youtube.svg' },
   { id: 'love', label: 'Love', kind: 'Application', keywords: 'love private girlfriend coming soon secret', icon: 'images/icons/love.svg' },
   { id: 'social', label: 'Social', kind: 'Application', keywords: 'links github linkedin instagram contact', icon: 'images/icons/contacts.png' },

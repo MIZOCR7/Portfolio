@@ -147,6 +147,7 @@ export default function Window({
           if (e.target.closest('button')) return
           if (!mobile) setMaxed(v => !v)
         }}
+        data-cursor="move"
         className="group/title relative z-10 flex h-[42px] flex-none select-none items-center gap-2 border-b border-[var(--line)] bg-[var(--win-2)] px-3"
       >
         <div className="flex items-center gap-2">
@@ -203,7 +204,8 @@ export default function Window({
           onPointerMove={moveResize}
           onPointerUp={endResize}
           onPointerCancel={endResize}
-          className="absolute bottom-0 right-0 z-20 h-4 w-4 cursor-nwse-resize"
+          data-cursor="resize"
+          className="absolute bottom-0 right-0 z-20 h-4 w-4"
           style={{ touchAction: 'none' }}
         >
           <span className="absolute bottom-[3px] right-[3px] h-2 w-2 rounded-br-[3px] border-b-2 border-r-2 border-[var(--line)] opacity-60" />

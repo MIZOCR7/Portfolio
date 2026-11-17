@@ -1,21 +1,69 @@
 import { useEffect, useRef, useState } from 'react'
 
 const BOOKMARKS = [
-  { label: 'Wikipedia', detail: 'The free encyclopedia', url: 'https://en.wikipedia.org/wiki/Main_Page', color: 'linear-gradient(145deg,#5b5b5b,#1f1f1f)', glyph: 'W' },
-  { label: 'Google', detail: 'Search the web', url: 'https://www.google.com/search?igu=1&q=Ziad+Emad', color: 'linear-gradient(145deg,#4285f4,#1a73e8)', glyph: 'G' },
-  { label: 'Internet Archive', detail: 'Books, audio, the web', url: 'https://archive.org', color: 'linear-gradient(145deg,#2c2c2c,#090909)', glyph: 'A' },
-  { label: 'Gutenberg', detail: '70,000 free books', url: 'https://www.gutenberg.org', color: 'linear-gradient(145deg,#5d7c4a,#2f4226)', glyph: 'G' },
-  { label: 'Bing', detail: 'Search and news', url: 'https://www.bing.com/search?q=design+engineering', color: 'linear-gradient(145deg,#00a88f,#006b5b)', glyph: 'b' },
-  { label: 'Hacker News', detail: 'What builders read', url: 'https://news.ycombinator.com/news', color: 'linear-gradient(145deg,#ff8b3d,#c2410c)', glyph: 'Y' },
+  { label: 'Wikipedia', detail: 'The free encyclopedia', url: 'https://en.wikipedia.org/wiki/Main_Page', icon: 'https://www.google.com/s2/favicons?domain=wikipedia.org&sz=64', color: 'linear-gradient(145deg,#5b5b5b,#1f1f1f)', glyph: 'W' },
+  { label: 'Commons', detail: 'Images and media', url: 'https://commons.wikimedia.org/wiki/Main_Page', icon: 'https://www.google.com/s2/favicons?domain=commons.wikimedia.org&sz=64', color: 'linear-gradient(145deg,#3b7a57,#1f4734)', glyph: 'C' },
+  { label: 'Internet Archive', detail: 'Books, audio, the web', url: 'https://archive.org', icon: 'https://www.google.com/s2/favicons?domain=archive.org&sz=64', color: 'linear-gradient(145deg,#2c2c2c,#090909)', glyph: 'A' },
+  { label: 'Gutenberg', detail: '70,000 free books', url: 'https://www.gutenberg.org', icon: 'https://www.google.com/s2/favicons?domain=gutenberg.org&sz=64', color: 'linear-gradient(145deg,#5d7c4a,#2f4226)', glyph: 'G' },
+  { label: 'Bing', detail: 'Search and news', url: 'https://www.bing.com/search?q=design+engineering', icon: 'https://www.google.com/s2/favicons?domain=bing.com&sz=64', color: 'linear-gradient(145deg,#00a88f,#006b5b)', glyph: 'b' },
+  { label: 'Hacker News', detail: 'What builders read', url: 'https://news.ycombinator.com/news', icon: 'https://www.google.com/s2/favicons?domain=ycombinator.com&sz=64', color: 'linear-gradient(145deg,#ff8b3d,#c2410c)', glyph: 'Y' },
 ]
 
-function normalize(value) {
+function faviconUrl(host) {
+  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=64`
+}
+
+function Favicon({ bookmark }) {
+  const [broken, setBroken] = useState(false)
+  return (
+    <span
+      className="relative flex h-9 w-9 flex-none items-center justify-center overflow-hidden rounded-[8px] bg-white shadow-sm ring-1 ring-black/5"
+      style={broken ? { background: bookmark.color } : undefined}
+    >
+      {broken ? (
+        <span className="text-[14px] font-bold text-white">{bookmark.glyph}</span>
+      ) : (
+        <img
+          src={bookmark.icon}
+          alt=""
+          loading="lazy"
+          className="h-5 w-5 object-contain"
+          onError={() => setBroken(true)}
+        />
+      )}
+    </span>
+  )
+}
+
+const SEARCH_ENGINES = [
+  {
+    id: 'bing',
+    label: 'Bing',
+    note: 'Recommended',
+    build: query => `https://www.bing.com/search?q=${encodeURIComponent(query)}&setlang=en`,
+  },
+  {
+    id: 'wikipedia',
+    label: 'Wikipedia',
+    note: 'Reference',
+    build: query => `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(query)}`,
+  },
+  {
+    id: 'archive',
+    label: 'Archive',
+    note: 'Books & media',
+    build: query => `https://archive.org/search?query=${encodeURIComponent(query)}`,
+  },
+]
+
+function normalize(value, engineId = 'bing') {
   const raw = value.trim()
   if (!raw) return ''
   if (/^(javascript|data|file|vbscript|about):/i.test(raw)) return ''
   if (/^https?:\/\//i.test(raw)) return raw
   if (/^[\w-]+(\.[\w-]+)+([/:?#].*)?$/.test(raw) && !/\s/.test(raw)) return `https://${raw}`
-  return `https://www.google.com/search?igu=1&q=${encodeURIComponent(raw)}`
+  const engine = SEARCH_ENGINES.find(item => item.id === engineId) || SEARCH_ENGINES[0]
+  return engine.build(raw)
 }
 
 function hostOf(url) {
@@ -41,9 +89,17 @@ export default function Browser() {
   const [loading, setLoading] = useState(false)
   const [frameKey, setFrameKey] = useState(0)
   const [notice, setNotice] = useState('')
+  const [engine, setEngine] = useState(() => {
+    try {
+      return localStorage.getItem('ziad-search-engine') || 'bing'
+    } catch {
+      return 'bing'
+    }
+  })
   const loadTimer = useRef(0)
 
   const current = index >= 0 ? history[index] : null
+  const activeEngine = SEARCH_ENGINES.find(item => item.id === engine) || SEARCH_ENGINES[0]
   const canBack = index >= 0
   const canForward = index < history.length - 1
 
@@ -60,8 +116,17 @@ export default function Browser() {
     return () => window.clearTimeout(loadTimer.current)
   }, [current?.url, frameKey])
 
+  const chooseEngine = id => {
+    setEngine(id)
+    try {
+      localStorage.setItem('ziad-search-engine', id)
+    } catch {
+      /* storage can be unavailable */
+    }
+  }
+
   const go = raw => {
-    const url = normalize(raw)
+    const url = normalize(raw, engine)
     if (!url) {
       setNotice('That address is not allowed inside the browser.')
       return
@@ -148,9 +213,14 @@ export default function Browser() {
         >
           <label className="flex h-8 min-w-0 items-center gap-1.5 rounded-[7px] border border-black/10 bg-white px-2.5 shadow-[inset_0_1px_1px_rgba(0,0,0,0.04)] focus-within:border-[#0a84ff]/60 focus-within:ring-2 focus-within:ring-[#0a84ff]/15 dark:border-white/15 dark:bg-[#1c1c1e]">
             {current ? (
-              <svg viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3 flex-none text-[#4c4c50]/55 dark:text-white/45" aria-hidden="true">
-                <path d="M12 2a5 5 0 0 0-5 5v2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm0 2a3 3 0 0 1 3 3v2H9V7a3 3 0 0 1 3-3Z" />
-              </svg>
+              <img
+                src={faviconUrl(hostOf(current.url))}
+                alt=""
+                className="h-3.5 w-3.5 flex-none rounded-[2px] object-contain"
+                onError={event => {
+                  event.currentTarget.style.display = 'none'
+                }}
+              />
             ) : (
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3 w-3 flex-none text-[#4c4c50]/55 dark:text-white/45" aria-hidden="true">
                 <circle cx="10.5" cy="10.5" r="6.5" />
@@ -160,7 +230,7 @@ export default function Browser() {
             <input
               value={draft}
               onChange={event => setDraft(event.target.value)}
-              placeholder="Search or enter a website"
+              placeholder={`Search ${activeEngine.label} or enter a website`}
               aria-label="Address and search"
               spellCheck="false"
               autoCapitalize="off"
@@ -227,8 +297,16 @@ export default function Browser() {
           </div>
         </>
       ) : (
-        <div className="min-h-0 flex-1 overflow-y-auto bg-[#f5f5f7] dark:bg-[#1c1c1e]">
-          <div className="mx-auto max-w-[760px] px-5 pb-10 pt-8 sm:px-8 sm:pt-12">
+        <div className="relative min-h-0 flex-1 overflow-y-auto bg-[#f5f5f7] dark:bg-[#1c1c1e]">
+          <div
+            className="pointer-events-none absolute -left-20 -top-24 h-72 w-72 rounded-full bg-[#7cc7ff]/35 blur-3xl dark:bg-[#0a84ff]/20"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute -right-24 top-24 h-80 w-80 rounded-full bg-[#ffb7d5]/30 blur-3xl dark:bg-[#bf5af2]/15"
+            aria-hidden="true"
+          />
+          <div className="relative mx-auto max-w-[760px] px-5 pb-10 pt-8 sm:px-8 sm:pt-12">
             <div className="text-center">
               <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-[18px] bg-gradient-to-br from-[#3d9bff] to-[#0066cc] text-white shadow-[0_12px_28px_rgba(0,102,204,0.28)]">
                 <svg viewBox="0 0 64 64" className="h-9 w-9" fill="none" aria-hidden="true">
@@ -261,7 +339,7 @@ export default function Browser() {
                 <input
                   value={draft}
                   onChange={event => setDraft(event.target.value)}
-                  placeholder="Search the web or type a URL"
+                  placeholder={`Search ${activeEngine.label} or type a URL`}
                   aria-label="Search the web"
                   spellCheck="false"
                   autoCapitalize="off"
@@ -272,6 +350,29 @@ export default function Browser() {
                 Go
               </button>
             </form>
+
+            <div className="mx-auto mt-3 flex max-w-[590px] flex-wrap items-center gap-1.5">
+              <span className="mr-0.5 text-[9.5px] font-semibold uppercase tracking-[0.13em] text-[#4c4c50]/40 dark:text-white/30">Search with</span>
+              {SEARCH_ENGINES.map(item => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => chooseEngine(item.id)}
+                  aria-pressed={engine === item.id}
+                  className={`rounded-full px-2.5 py-1 text-[10px] font-semibold transition ${
+                    engine === item.id
+                      ? 'bg-[#0a84ff] text-white shadow-sm'
+                      : 'bg-black/[0.055] text-[#4c4c50]/65 hover:bg-black/[0.09] dark:bg-white/10 dark:text-white/55 dark:hover:bg-white/15'
+                  }`}
+                  title={item.id === 'bing' ? 'Bing works reliably inside this browser' : item.note}
+                >
+                  {item.label}
+                </button>
+              ))}
+              <span className="ml-auto text-[9px] text-[#4c4c50]/35 dark:text-white/25">
+                {engine === 'bing' ? 'Bing works in-app' : activeEngine.note}
+              </span>
+            </div>
 
             <div className="mt-8 flex items-center justify-between">
               <h2 className="text-[13px] font-semibold tracking-[-0.01em]">Favourites</h2>
@@ -285,9 +386,7 @@ export default function Browser() {
                   onClick={() => go(bookmark.url)}
                   className="group flex min-w-0 items-center gap-2.5 rounded-[10px] border border-black/[0.07] bg-white p-2.5 text-left shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition hover:-translate-y-0.5 hover:shadow-md dark:border-white/10 dark:bg-[#2c2c2e]"
                 >
-                  <span className="flex h-9 w-9 flex-none items-center justify-center rounded-[8px] text-[15px] font-bold text-white shadow-sm" style={{ background: bookmark.color }}>
-                    {bookmark.glyph}
-                  </span>
+                  <Favicon bookmark={bookmark} />
                   <span className="min-w-0">
                     <span className="block truncate text-[11.5px] font-semibold">{bookmark.label}</span>
                     <span className="block truncate text-[9.5px] text-[#4c4c50]/50 dark:text-white/40">{bookmark.detail}</span>
@@ -296,7 +395,7 @@ export default function Browser() {
               ))}
             </div>
 
-            <div className="mt-7 flex items-start gap-2.5 rounded-[10px] border border-black/[0.06] bg-white/70 p-3 text-[10.5px] leading-relaxed text-[#4c4c50]/65 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/45">
+            <div data-cursor="help" className="mt-7 flex items-start gap-2.5 rounded-[10px] border border-black/[0.06] bg-white/70 p-3 text-[10.5px] leading-relaxed text-[#4c4c50]/65 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/45">
               <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-[#0a84ff]/10 text-[#0a84ff]">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3 w-3" aria-hidden="true">
                   <circle cx="12" cy="12" r="9" />

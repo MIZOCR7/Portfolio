@@ -55,6 +55,7 @@ export default function Photos({ onView }) {
               key={photo.src}
               type="button"
               onClick={() => onView({ src: photo.src, title: photo.title, meta: photo.meta })}
+              data-cursor="zoom"
               className="group relative overflow-hidden rounded-[7px] bg-[var(--hover)] text-left ring-1 ring-black/5 focus-visible:ring-[#0a84ff] dark:ring-white/10"
             >
               <span className="block aspect-[4/3] overflow-hidden">

@@ -24,7 +24,7 @@ export default function Dock({
     { id: 'reset', label: 'Reset Layout', icon: 'images/trash.png', special: 'reset' },
   ]
   const compactSize = compact
-    ? Math.max(24, Math.min(size - 28, Math.floor((width - 20) / items.length) - 2))
+    ? Math.max(18, Math.min(size - 28, Math.floor((width - 20) / items.length) - 2))
     : size
 
   const reset = () => {

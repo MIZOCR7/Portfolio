@@ -21,6 +21,8 @@ import Notes from '../apps/Notes'
 import Photos from '../apps/Photos'
 import Browser from '../apps/Browser'
 import Music from '../apps/Music'
+import Clock from '../apps/Clock'
+import Calculator from '../apps/Calculator'
 import YouTube from '../apps/YouTube'
 import Love from '../apps/Love'
 import Social from '../apps/Social'
@@ -60,6 +62,25 @@ export default function Desktop() {
   const toastTimer = useRef(0)
   const openers = useRef(new Map())
   const wallpaperRef = useRef(null)
+
+  useEffect(() => {
+    const element = wallpaperRef.current
+    if (!element || element.tagName !== 'VIDEO') return undefined
+    if (reduce) {
+      element.pause()
+      return undefined
+    }
+    const play = () => {
+      const started = element.play()
+      if (started?.catch) started.catch(() => {})
+    }
+    play()
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') play()
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => document.removeEventListener('visibilitychange', onVisibility)
+  }, [wallpaperId, reduce])
   const areaRef = useRef(null)
   const windowsRef = useRef([])
   const skipPop = useRef(false)
@@ -453,6 +474,8 @@ export default function Desktop() {
     if (win.app === 'photos') return <Photos onView={item => open('viewer', item)} />
     if (win.app === 'browser') return <Browser />
     if (win.app === 'music') return <Music onOpenApp={app => open(app)} />
+    if (win.app === 'clock') return <Clock />
+    if (win.app === 'calculator') return <Calculator />
     if (win.app === 'youtube') return <YouTube />
     if (win.app === 'love') return <Love />
     if (win.app === 'social') return <Social onLink={openLink} />
@@ -475,16 +498,32 @@ export default function Desktop() {
 
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden bg-[#1a1d21]">
-      <img
-        ref={wallpaperRef}
-        key={wallpaper.src}
-        src={wallpaper.src}
-        alt=""
-        aria-hidden="true"
-        className="wallpaper-img"
-        fetchPriority="high"
-        draggable={false}
-      />
+      {wallpaper.video ? (
+        <video
+          ref={wallpaperRef}
+          key={wallpaper.video}
+          src={wallpaper.video}
+          poster={wallpaper.src}
+          autoPlay={!reduce}
+          loop
+          muted
+          playsInline
+          aria-hidden="true"
+          className="wallpaper-img"
+          preload="auto"
+        />
+      ) : (
+        <img
+          ref={wallpaperRef}
+          key={wallpaper.src}
+          src={wallpaper.src}
+          alt=""
+          aria-hidden="true"
+          className="wallpaper-img"
+          fetchPriority="high"
+          draggable={false}
+        />
+      )}
       <div
         className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/30"
         aria-hidden="true"
@@ -722,6 +761,8 @@ export default function Desktop() {
                   { label: 'Open Studio', action: () => open('folder', 'studio') },
                   { label: 'Open Safari', action: () => open('browser') },
                   { label: 'Open Music', action: () => open('music') },
+                  { label: 'Open Clock', action: () => open('clock') },
+                  { label: 'Open Calculator', action: () => open('calculator') },
                   { label: 'Open YouTube', action: () => open('youtube') },
                   { label: 'Open Love', action: () => open('love') },
                   { label: 'Open AI Terminal', action: () => open('terminal') },

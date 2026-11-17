@@ -30,11 +30,13 @@ export const CONFIG = {
   wallpapers: [
     { id: 'sonoma', label: 'Horizon', src: 'images/wallpaper.webp', tone: '#6b7d8f' },
     { id: 'sequoia', label: 'Sequoia', src: 'images/sequoia.webp', tone: '#5f8b6d' },
+    { id: 'live-aurora', label: 'Live Aurora', src: 'media/wallpapers/preview1.jpg', video: 'media/background1.mp4', tone: '#12324d', live: true },
+    { id: 'live-ember', label: 'Live Ember', src: 'media/wallpapers/preview2.jpg', video: 'media/background2.mp4', tone: '#57162d', live: true },
   ],
   defaultWallpaper: 'sonoma',
 
   desktop: {
-    hint: 'Six folders are spread across the desk, with the AI Terminal in the middle. Double-click a folder to look inside, or right-click the desktop for more. Safari and Love are in the Dock; Music and YouTube are in Studio too.',
+    hint: 'Six folders are spread across the desk, with the AI Terminal in the middle. Double-click a folder to look inside, or right-click the desktop for more. Safari, Music, Clock and Calculator are in the Dock; YouTube and Love are there too.',
     resetNote: 'Desktop folders restored to their original places.',
   },
 
@@ -942,6 +944,8 @@ export const dockApps = [
   { id: 'photos', label: 'Photos', icon: 'images/icons/photos.png', app: 'photos' },
   { id: 'browser', label: 'Safari', icon: 'images/icons/safari.png', app: 'browser' },
   { id: 'music', label: 'Music', icon: 'images/icons/music.png', app: 'music' },
+  { id: 'clock', label: 'Clock', icon: 'images/icons/clock.svg', app: 'clock' },
+  { id: 'calculator', label: 'Calculator', icon: 'images/icons/calculator.svg', app: 'calculator' },
   { id: 'youtube', label: 'YouTube', icon: 'images/icons/youtube.svg', app: 'youtube' },
   { id: 'love', label: 'Love', icon: 'images/icons/love.svg', app: 'love' },
   { id: 'social', label: 'Social', icon: 'images/icons/contacts.png', app: 'social' },
@@ -961,6 +965,8 @@ export const appWindows = {
   photos: { title: 'Photos', w: 920, h: 620 },
   browser: { title: 'Safari', w: 1080, h: 720 },
   music: { title: 'Music', w: 1000, h: 700 },
+  clock: { title: 'Clock', w: 760, h: 620 },
+  calculator: { title: 'Calculator', w: 380, h: 580 },
   youtube: { title: 'YouTube', w: 1040, h: 700 },
   love: { title: 'Love', w: 560, h: 480 },
   social: { title: 'Social', w: 780, h: 560 },

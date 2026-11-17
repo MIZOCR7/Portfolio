@@ -12,6 +12,8 @@ const APPS = [
   { id: 'photos', label: 'Photos', icon: 'images/icons/photos.png' },
   { id: 'browser', label: 'Safari', icon: 'images/icons/safari.png' },
   { id: 'music', label: 'Music', icon: 'images/icons/music.png' },
+  { id: 'clock', label: 'Clock', icon: 'images/icons/clock.svg' },
+  { id: 'calculator', label: 'Calculator', icon: 'images/icons/calculator.svg' },
   { id: 'youtube', label: 'YouTube', icon: 'images/icons/youtube.svg' },
   { id: 'love', label: 'Love', icon: 'images/icons/love.svg' },
   { id: 'social', label: 'Social', icon: 'images/icons/contacts.png' },

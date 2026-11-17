@@ -55,7 +55,6 @@ body {
 button {
   font: inherit;
   color: inherit;
-  cursor: default;
 }
 
 ::selection {
@@ -158,7 +157,6 @@ button {
   background: transparent;
   border: 0;
   padding: 0;
-  cursor: default;
   outline: none;
 }
 
@@ -234,12 +232,6 @@ button {
   background-clip: content-box;
 }
 
-.is-dragging,
-.is-dragging * {
-  cursor: grabbing !important;
-  user-select: none !important;
-}
-
 .reduce-motion *,
 .reduce-motion *::before,
 .reduce-motion *::after {
@@ -298,32 +290,103 @@ button {
   }
 }
 
-/* macOS cursors (Tahoe set, MIT — see public/cursors/LICENSE.txt) */
+/* macOS cursors (Tahoe set, MIT — see public/cursors/LICENSE.txt)
+   Every interactive state gets a custom pointer, including drag, resize and
+   disabled states, so the browser never falls back to its stock arrow. */
 :root {
   --cursor-arrow: url('/cursors/macos-arrow.png') 2 3, default;
   --cursor-hand: url('/cursors/macos-hand.png') 10 3, pointer;
   --cursor-text: url('/cursors/macos-i-beam.png') 30 30, text;
+  --cursor-grab: url('/cursors/macos-grab.png') 24 28, grab;
+  --cursor-grabbing: url('/cursors/macos-grabbing.png') 26 30, grabbing;
+  --cursor-move: url('/cursors/macos-move.png') 32 32, move;
+  --cursor-resize: url('/cursors/macos-resize-nwse.png') 32 32, nwse-resize;
+  --cursor-resize-ew: url('/cursors/macos-resize-ew.png') 32 32, ew-resize;
+  --cursor-not-allowed: url('/cursors/macos-not-allowed.png') 32 32, not-allowed;
+  --cursor-crosshair: url('/cursors/macos-crosshair.png') 32 32, crosshair;
+  --cursor-help: url('/cursors/macos-help.png') 32 32, help;
+  --cursor-zoom-in: url('/cursors/macos-zoom-in.png') 28 28, zoom-in;
 }
 
 html,
 body,
-#root,
-button,
-[role='button'],
-summary,
-select {
+#root {
   cursor: var(--cursor-arrow);
 }
 
+button,
+[role='button'],
+summary,
+select,
 a,
+.dock-item,
 [data-cursor='hand'] {
   cursor: var(--cursor-hand);
 }
 
+.desk-icon,
+[data-cursor='grab'] {
+  cursor: var(--cursor-grab);
+}
+
+[data-cursor='move'] {
+  cursor: var(--cursor-move);
+}
+
+[data-cursor='resize'] {
+  cursor: var(--cursor-resize);
+}
+
+input[type='range'],
+[data-cursor='ew'] {
+  cursor: var(--cursor-resize-ew);
+}
+
+[data-cursor='zoom'] {
+  cursor: var(--cursor-zoom-in);
+}
+
+[data-cursor='help'] {
+  cursor: var(--cursor-help);
+}
+
+[data-cursor='crosshair'] {
+  cursor: var(--cursor-crosshair);
+}
+
+[data-cursor='not-allowed'],
+button:disabled,
+[aria-disabled='true'] {
+  cursor: var(--cursor-not-allowed);
+}
+
 input,
 textarea,
-[contenteditable='true'] {
+[contenteditable='true'],
+[data-cursor='text'],
+p,
+li,
+blockquote,
+dt,
+dd,
+figcaption,
+pre,
+code {
   cursor: var(--cursor-text);
+}
+
+/* A paragraph inside a card is still part of the card, not a text field. */
+button *,
+a *,
+[role='button'] *,
+summary * {
+  cursor: inherit;
+}
+
+.is-dragging,
+.is-dragging * {
+  cursor: var(--cursor-grabbing) !important;
+  user-select: none !important;
 }
 
 /* macOS Music transport sliders */

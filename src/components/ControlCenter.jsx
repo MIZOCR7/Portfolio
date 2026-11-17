@@ -100,7 +100,28 @@ export default function ControlCenter({
                 aria-pressed={wallpaperId === w.id}
                 className={`overflow-hidden rounded-[8px] border-2 text-left ${wallpaperId === w.id ? 'border-[#0a84ff]' : 'border-transparent'}`}
               >
-                <img src={w.src} alt="" className="h-[52px] w-full object-cover" loading="lazy" />
+                <span className="relative block">
+                  {w.video ? (
+                    <video
+                      src={w.video}
+                      poster={w.src}
+                      muted
+                      loop
+                      autoPlay
+                      playsInline
+                      preload="metadata"
+                      aria-hidden="true"
+                      className="h-[52px] w-full object-cover"
+                    />
+                  ) : (
+                    <img src={w.src} alt="" className="h-[52px] w-full object-cover" loading="lazy" />
+                  )}
+                  {w.live ? (
+                    <span className="absolute left-1.5 top-1.5 rounded-full bg-black/55 px-1.5 py-[2px] text-[8px] font-bold uppercase tracking-[0.12em] text-white shadow-sm backdrop-blur-md">
+                      Live
+                    </span>
+                  ) : null}
+                </span>
                 <span className="block bg-[var(--win)] px-2 py-1 text-[11px]">{w.label}</span>
               </button>
             ))}

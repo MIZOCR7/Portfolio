@@ -30,7 +30,8 @@ export default function Project({ project, onView }) {
               <button
                 type="button"
                 onClick={() => onView({ src: shot.src, title: project.title, meta: shot.caption })}
-                className="group relative block max-h-[46vh] cursor-zoom-in overflow-hidden rounded-[4px]"
+                data-cursor="zoom"
+                className="group relative block max-h-[46vh] overflow-hidden rounded-[4px]"
                 aria-label={`Open ${shot.caption} at full size`}
               >
                 <Media
